@@ -13,11 +13,31 @@
 
 ---
 
+## 🔄 這個 repo 正在拆成三個
+
+`my-vibe-scaffolding` 正在拆分成三個 repo，各自負責這個模板原本打包在一起的「黃金路徑」裡的一層：
+
+- **`ai-scheme`** — repo/CI 骨架層
+- **`ai-zpd`** — 能力傳遞機制層（**就是這個 repo**，正在改名中）
+- **`ai-skill-web`** — 手寫的 skill／agent 內容層
+
+這個 repo 保留原本的 git 歷史，之後會改名為 `ai-zpd`。另外兩個是新拆出來的，內容正在分階段搬入。
+
+### 為什麼叫 ai-zpd
+
+命名自 Lev Vygotsky 的「**最近發展區**」——俄文 **зона ближайшего развития**（拉丁轉寫：*zona blizhaishego razvitiya*）。有個翻譯上的細節：「ближайший」字面意思更接近「**最近的、緊接著的**」，而不是英文 "proximal" 給人的空間鄰近感——這個區域講的不是遙遠的伸展目標，而是緊接著就會到手的下一層能力。
+
+ZPD 指的是學習者獨立能做到的、跟有適當協助下能做到的之間的落差。這正是這個 repo 之後要做的事：決定該給 agent 什麼樣的能力／協助，正好卡在它獨立還做不到的邊界——不是它運作所在的骨架（`ai-scheme`），也不是 skill 內容本身（`ai-skill-web`）。
+
+---
+
 ## 📌 這是什麼？
 
 **AI 驅動的專案鷹架模板**，用於快速建立專案並遵循最佳實踐。
 
-基於心理學家 Lev Vygotsky 的鷹架理論 — 在需要時提供結構支援，不需要時可移除。
+取名自教育心理學裡的「鷹架」比喻 — 在需要時提供結構支援，不需要時可以拆除。
+
+> 「鷹架」（scaffolding）一詞由 Wood、Bruner 與 Ross 於 1976 年提出，用來描述更有能力的引導者如何在 Vygotsky 的「最近發展區」（Zone of Proximal Development, ZPD——學習者獨立能做到的、與在協助下能做到的之間的落差）裡支持學習者。Vygotsky 本人其實從未使用過「鷹架」這個詞。
 
 <div align="center">
 <img src="./.scaffolding/assets/images/20260225_vibe-scaffolding-illustration-american.png" alt="American Style Illustration" width="300"/>
@@ -117,7 +137,7 @@ MIT 授權 - 參閱 [LICENSE](./LICENSE)
 
 <div align="center">
 
-**基於 Vygotsky 鷹架理論 | AI 驅動 | 為開發者設計**
+**Vygotsky 的 ZPD，Bruner 的鷹架 | AI 驅動 | 為開發者設計**
 
 [文件](./.scaffolding/docs/) | [變更記錄](./.scaffolding/CHANGELOG.md) | [GitHub](https://github.com/matheme-justyn/my-vibe-scaffolding)
 

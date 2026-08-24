@@ -13,11 +13,31 @@ English | [繁體中文](./README.zh-TW.md)
 
 ---
 
+## 🔄 This Repo is Splitting Into Three
+
+`my-vibe-scaffolding` is being split into three repos, each responsible for one layer of the "golden path" this template used to hold as a single bundle:
+
+- **`ai-scheme`** — the repo/CI skeleton layer
+- **`ai-zpd`** — the capability-delivery mechanism layer (**this repo**, being renamed)
+- **`ai-skill-web`** — the hand-authored skill/agent-content layer
+
+This repo keeps its git history and becomes `ai-zpd`. The other two are newly split out and being populated in stages.
+
+### Why "ai-zpd"
+
+Named after Lev Vygotsky's **Zone of Proximal Development** — Russian **зона ближайшего развития** (*zona blizhaishego razvitiya*). One translation note: "ближайший" more precisely means "nearest" or "next," not the spatially-flavored English "proximal" — the zone isn't some distant stretch goal, it's the very next layer of ability already within reach.
+
+ZPD is the gap between what a learner can do alone and what they can do with the right support. That's this repo's job going forward: deciding what capability/support gets extended to an agent, right at the edge of what it can't yet do alone — not the skeleton it runs in (`ai-scheme`), not the skill content itself (`ai-skill-web`).
+
+---
+
 ## 📌 What is This?
 
 **AI-driven project scaffolding template** for quick project setup with best practices.
 
-Based on psychologist Lev Vygotsky's scaffolding theory — provides structure when you need it, remove it when you don't.
+Named after the *scaffolding* metaphor from educational psychology — provides structure when you need it, remove it when you don't.
+
+> The term "scaffolding" was coined by Wood, Bruner & Ross (1976) to describe how a more knowledgeable guide supports a learner across Vygotsky's Zone of Proximal Development (ZPD) — the gap between what a learner can do alone and what they can do with help. Vygotsky himself never used the word "scaffolding."
 
 <div align="center">
 <img src="./.scaffolding/assets/images/20260225_vibe-scaffolding-illustration-american.png" alt="American Style Illustration" width="300"/>
@@ -117,7 +137,7 @@ MIT License - See [LICENSE](./LICENSE)
 
 <div align="center">
 
-**Based on Vygotsky's Scaffolding Theory | Powered by AI | For Developers**
+**Vygotsky's ZPD, Bruner's Scaffolding | Powered by AI | For Developers**
 
 [Documentation](./.scaffolding/docs/) | [Changelog](./.scaffolding/CHANGELOG.md) | [GitHub](https://github.com/matheme-justyn/my-vibe-scaffolding)
 

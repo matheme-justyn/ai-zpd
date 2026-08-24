@@ -572,7 +572,7 @@ sequenceDiagram
 - [AGENTS.md Standard](https://github.com/ohmyopencode/AGENTS.md)
 - [Semantic Versioning](https://semver.org/)
 - [BCP 47 Language Tags](https://www.rfc-editor.org/rfc/rfc5646.html)
-- [Vygotsky's Scaffolding Theory](https://en.wikipedia.org/wiki/Instructional_scaffolding)
+- [Instructional Scaffolding — Wood, Bruner & Ross (1976), building on Vygotsky's Zone of Proximal Development](https://en.wikipedia.org/wiki/Instructional_scaffolding)
 
 ---
 
