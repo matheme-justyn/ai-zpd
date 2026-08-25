@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-08-25
+
+### Changed
+
+- **Renamed from `my-vibe-scaffolding` to `ai-zpd`**: this repo is now scoped to the capability-delivery mechanism layer only (install/update orchestration, OpenCode/MCP config, service detection, module loading). Named after Lev Vygotsky's Zone of Proximal Development.
+- Split into three repos following the same "Psychologist + term + vanished occupation" naming pattern: [`ai-scheme`](https://github.com/matheme-justyn/ai-scheme) (repo/CI skeleton, Piaget's *schème* / Punchcutter) and [`ai-skill-web`](https://github.com/matheme-justyn/ai-skill-web) (agent roles, Skills system, SDD workflow; Kurt Fischer's Skill Web / Wheelwright).
+
+### Removed
+
+- `.scaffolding/agents/`, most of `.scaffolding/docs/`, `.scaffolding/languages/`, `.scaffolding/i18n/`, `.scaffolding/templates/pr/`, `.scaffolding/vscode/`, `.scaffolding/hooks/pre-push` — migrated to `ai-scheme` or `ai-skill-web` per the split above. `AGENTS.md` and `config.toml.example` were re-scoped to cover only this repo's remaining responsibility.
+
+### Breaking
+
+- Anyone using `my-vibe-scaffolding` as a Copier/template source needs to switch to the split repos; this repo alone no longer contains the full scaffold.
+
 ## [3.2.0] - 2026-04-15
 
 ### Added

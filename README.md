@@ -2,9 +2,9 @@
 
 <img src="./.scaffolding/assets/images/20260225_vibe-scaffolding-logo.png" alt="Vibe Scaffolding Logo" width="400"/>
 
-# My Vibe Scaffolding
+# ai-zpd
 
-[![Version](https://img.shields.io/badge/version-3.2.0-blue.svg)](./.scaffolding/VERSION)
+[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](./.scaffolding/VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
 English | [繁體中文](./README.zh-TW.md)
