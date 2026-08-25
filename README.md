@@ -27,7 +27,15 @@ This repo keeps its git history and becomes `ai-zpd`. The other two are newly sp
 
 Named after Lev Vygotsky's **Zone of Proximal Development** — Russian **зона ближайшего развития** (*zona blizhaishego razvitiya*). One translation note: "ближайший" more precisely means "nearest" or "next," not the spatially-flavored English "proximal" — the zone isn't some distant stretch goal, it's the very next layer of ability already within reach.
 
-ZPD is the gap between what a learner can do alone and what they can do with the right support. That's this repo's job going forward: deciding what capability/support gets extended to an agent, right at the edge of what it can't yet do alone — not the skeleton it runs in (`ai-scheme`), not the skill content itself (`ai-skill-web`).
+ZPD is the gap between what a learner can do alone and what they can do with the right support. That's this repo's job going forward: deciding what capability/support gets extended to an agent, right at the edge of what it can't yet do alone — not the skeleton it runs in (`ai-scheme`), not the skill content itself (`ai-skill-web`). Concretely, that means being the connector layer: configure it once, and it routes capability into whatever the agent is actually running in — IDE, CLI, or anything else — without the caller needing to know the wiring underneath.
+
+### The Occupation: Telephonist
+
+Every name in this project family pairs a psychologist's term with a vanished occupation that embodies it. This one is the **telephonist**.
+
+Before automatic exchanges, you couldn't dial another line yourself — you told a telephonist the name or number you wanted, and she made the physical connection on a switchboard for you, without you ever needing to understand the exchange's wiring. Automated switching started in 1892; by the 1980s the manually-operated switchboard role had essentially vanished entirely.
+
+That's this repo's job in one image: you say what you want connected, and the connection happens, however the underlying platform actually needs to be wired.
 
 ---
 
