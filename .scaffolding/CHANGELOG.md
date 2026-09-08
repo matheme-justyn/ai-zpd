@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.2] - 2026-09-08
+
+### Added
+
+- ADR 0015: records the decision that ai-zpd and ai-scheme each keep their own config file in their own format (`config.toml` / `.scheme/config.yml`), with neither layer reading the other's, explicit key ownership per layer, and a cross-layer naming constraint. Also records the follow-up work this creates here: renaming `[project].type`, removing the now-dead `[project].mode`, and collapsing template-version tracking onto ai-scheme's `status --json`.
+
 ## [4.0.1] - 2026-08-25
 
 ### Added
