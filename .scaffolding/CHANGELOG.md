@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- `generate-pr-template.sh`. It read `.scaffolding/templates/pr/`, a directory that no longer exists, so it could not run. PR-template generation belongs to the skeleton layer (ADR 0014); `ai-scheme` has said it will not take this script, because that layer ships a single-structure `.github/PULL_REQUEST_TEMPLATE.md` from its CLI rather than from a shell script, with multi-language versions tracked separately. Deleted rather than handed over.
+
+### Added
+
+- A handover list in `.scaffolding/docs/OWNERSHIP.md` for the three documents `ai-scheme` has agreed to receive, with the git incantation to retrieve the two already deleted. Documents are not written into the other repository from here; that layer opens its own receiving issues and decides per document.
+
+
 ### Fixed
 
 - `init-project.sh` aborted partway through both the install and update paths. Removing `install-hooks.sh` left three live call sites in it, and with `set -e` a missing command exits the script — so the primary install path broke at "步驟 8/10: Git Hooks 設定" and the update path at "步驟 3/3". The hook the script installed had already been pointing at a `.scaffolding/hooks/` directory that does not exist, so the step had nothing left to do; it is removed rather than repaired, and the remaining steps renumbered.
