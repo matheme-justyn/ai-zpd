@@ -101,6 +101,32 @@ jobs:
             fi
           fi
 
+          # The .scaffolding/ directory was called .template/ before v2. Three
+          # scripts were still reaching for the old path years later --
+          # sync-template.sh could never find a VERSION file and said so while
+          # naming the *new* path in the error, because the strings were
+          # renamed and the variable was not. migrate-to-template-dir.sh is the
+          # one legitimate reader: it migrates projects created before the
+          # rename, and carries a marker comment saying so.
+          LEGACY_PATHS=0
+          for script in .scaffolding/scripts/*.sh; do
+            [ -e "$script" ] || continue
+            grep -q 'ai-zpd-allow-legacy-template-path' "$script" && continue
+            if grep -nE '(^|[/"'"'"' ])\.template(["'"'"'/]|$)' "$script" >/dev/null 2>&1; then
+              grep -nE '(^|[/"'"'"' ])\.template(["'"'"'/]|$)' "$script" | while IFS= read -r hit; do
+                echo "✗ $script:$hit"
+              done
+              LEGACY_PATHS=$((LEGACY_PATHS + 1))
+            fi
+          done
+
+          if [ "$LEGACY_PATHS" -gt 0 ]; then
+            echo "✗ $LEGACY_PATHS script(s) still reference the pre-rename .template/ path"
+            VALIDATION_PASSED=false
+          else
+            echo "  no pre-rename .template/ paths"
+          fi
+
           echo ""
 
           # 2. Configuration validation

@@ -48,7 +48,6 @@ rm -rf .scaffolding/languages/rust/
 ```bash
 # 看完這些指南後，可以刪除
 rm .scaffolding/docs/README_GUIDE.md
-rm .scaffolding/docs/TEMPLATE_SYNC.md
 rm .scaffolding/docs/README_BILINGUAL_FORMAT.md
 
 # 或整個刪除（如果你已經熟悉）
@@ -122,7 +121,6 @@ echo "   只保留專案用的語言"
 
 # 3. 檢查說明書
 [ -f ".scaffolding/docs/README_GUIDE.md" ] && echo "⚠️ 讀完可刪：.scaffolding/docs/README_GUIDE.md"
-[ -f ".scaffolding/docs/TEMPLATE_SYNC.md" ] && echo "⚠️ 讀完可刪：.scaffolding/docs/TEMPLATE_SYNC.md"
 
 # 4. 檢查 AI 工具配置
 [ -d ".claude" ] && echo "⚠️ 如不用 Claude：刪除 .claude/"

@@ -46,6 +46,9 @@ fi
 success "Git repository detected"
 
 # Check if .scaffolding/ already exists
+# ai-zpd-allow-legacy-template-path: this script migrates projects created
+# before the .template/ -> .scaffolding/ rename, so the old path is what it
+# looks for. Every other script referring to .template/ is a bug.
 if [ -d ".template" ]; then
     warning ".scaffolding/ directory already exists"
     info "Checking if migration is needed..."
@@ -213,7 +216,6 @@ if [ -f "AGENTS.md" ]; then
     # Update paths
     sed -i.tmp 's|docs/DOCUMENTATION_GUIDELINES.md|.scaffolding/docs/DOCUMENTATION_GUIDELINES.md|g' AGENTS.md
     sed -i.tmp 's|docs/README_GUIDE.md|.scaffolding/docs/README_GUIDE.md|g' AGENTS.md
-    sed -i.tmp 's|docs/TEMPLATE_SYNC.md|.scaffolding/docs/TEMPLATE_SYNC.md|g' AGENTS.md
     sed -i.tmp 's|scripts/init-project.sh|.scaffolding/scripts/init-project.sh|g' AGENTS.md
     sed -i.tmp 's|i18n/locales/|.scaffolding/i18n/locales/|g' AGENTS.md
     

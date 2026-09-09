@@ -6,7 +6,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-TEMPLATE_DIR="$PROJECT_ROOT/.template"
+TEMPLATE_DIR="$PROJECT_ROOT/.scaffolding"
 VERSION_FILE="$TEMPLATE_DIR/VERSION"
 TRACKING_FILE="$PROJECT_ROOT/.template-version"
 
