@@ -133,10 +133,10 @@ Example: Prevent google-search calls when API unavailable, use alternatives.
 
 ## Related Documents
 
-- [AGENTS.md](../../AGENTS.md) - Commands and Service Detection Protocol sections
-- [`.agents/service-detection.md`](../../.agents/service-detection.md) - Service detection implementation
-- [`.scaffolding/docs/service-detection-protocol.md`](../service-detection-protocol.md) - User guide
-- [`.scaffolding/docs/SKILLS_USAGE_GUIDE.md`](../SKILLS_USAGE_GUIDE.md) - Skills system documentation
+- [AGENTS.md](../../../AGENTS.md) - Commands and Service Detection Protocol sections
+- `.agents/service-detection.md` - Service detection implementation
+- [`.scaffolding/docs/service-detection-protocol.md`](https://github.com/matheme-justyn/ai-skill-web/blob/main/docs/service-detection-protocol.md) - User guide
+- [`.scaffolding/docs/SKILLS_USAGE_GUIDE.md`](https://github.com/matheme-justyn/ai-skill-web/blob/main/docs/SKILLS_USAGE_GUIDE.md) - Skills system documentation
 
 ## References
 

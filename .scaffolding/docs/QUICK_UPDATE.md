@@ -85,9 +85,9 @@ ls -la .opencode-data/
 
 ## 📖 Detailed Documentation
 
-- [ADR 0005 - Technical Investigation](./.scaffolding/docs/adr/0005-single-instance-opencode-workflow.md)
-- [Setup Guide](./.scaffolding/docs/OPENCODE_SETUP_GUIDE.md)
-- [Template Sync](./.scaffolding/docs/TEMPLATE_SYNC.md)
+- [ADR 0005 - Technical Investigation](./adr/0005-single-instance-opencode-workflow.md)
+- [Setup Guide](./OPENCODE_SETUP_GUIDE.md)
+- [Template Sync](./TEMPLATE_SYNC.md)
 
 ---
 

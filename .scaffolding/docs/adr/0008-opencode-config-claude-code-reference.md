@@ -366,7 +366,7 @@ bundles:
 - [Anthropic Hackathon Winner Analysis](https://www.blocktempo.com/hackathon-winner-claude-code-setup-revealed/) (動區動趨)
 - [AGENTS.md Standard (2026)](https://github.com/agentsmd/agents.md)
 - Existing ADR 0005: [Single Instance OpenCode Workflow](./0005-single-instance-opencode-workflow.md)
-- Existing ADR 0007: [Agent Skills Ecosystem Integration](./0007-agent-skills-ecosystem-integration.md)
+- Existing ADR 0007: `0007-agent-skills-ecosystem-integration.md`（已隨 skills 內容遷往 ai-skill-web）
 
 ## Change Log
 

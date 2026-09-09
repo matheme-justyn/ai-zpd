@@ -83,15 +83,15 @@ This document serves as the primary instruction set for AI agents (like OpenCode
 
 - **Location**: `docs/PRD.md` (recommended) or `docs/specs/PRD.md`
 - **Purpose**: Define features, technical requirements, user flows for AI-assisted development
-- **Template**: See [.scaffolding/docs/templates/PRD_TEMPLATE.md](./.scaffolding/docs/templates/PRD_TEMPLATE.md)
-- **Guide**: See [.scaffolding/docs/PRD_GUIDE.md](./.scaffolding/docs/PRD_GUIDE.md)
+- **Template**: See `.scaffolding/docs/templates/PRD_TEMPLATE.md`
+- **Guide**: See `.scaffolding/docs/PRD_GUIDE.md`
 
 **Example PRD reference**:
 ## Project Overview
 
 YourProject is a [brief project description].
 
-**📋 Product Requirements**: See [docs/PRD.md](./docs/PRD.md) for complete specification.
+**📋 Product Requirements**: See `docs/PRD.md` for complete specification.
 
 **Key Features** (from PRD):
 - [Feature 1]
@@ -203,7 +203,7 @@ You're developing this scaffolding itself. File organization:
 - Create new ADRs in `.scaffolding/docs/adr/`
 - Reference scaffolding scripts from `.scaffolding/scripts/`
 - Reference scaffolding assets from `.scaffolding/assets/`
-- **Generate bilingual README** following [README_BILINGUAL_FORMAT.md](./.scaffolding/docs/README_BILINGUAL_FORMAT.md)
+- **Generate bilingual README** following `.scaffolding/docs/README_BILINGUAL_FORMAT.md`
 - **CHANGELOG**: Update `.scaffolding/CHANGELOG.md` (template changes)
 - **README sync**: If `sync_readme = true`, **all** `README*.md` files (all locales) auto-sync: root → `.scaffolding/`
 
@@ -271,7 +271,7 @@ Setup guide: [.scaffolding/docs/MCP_SETUP_GUIDE.md](./.scaffolding/docs/MCP_SETU
 ### AI Development Commands
 
 **Source**: [everything-claude-code](https://github.com/affaan-m/everything-claude-code)  
-**Documentation**: [`.scaffolding/agents/commands/README.md`](./.scaffolding/agents/commands/README.md)
+**Documentation**: [`.scaffolding/agents/commands/README.md`](https://github.com/matheme-justyn/ai-skill-web/tree/main/agents/commands)
 
 These commands provide task-specific workflows combining agents and skills:
 
@@ -396,7 +396,7 @@ These commands help manage OpenCode stability and workflow:
 
 **CRITICAL: AI agents MUST check service availability BEFORE calling external services.**
 
-**Reference**: [`.scaffolding/agents/service-detection.md`](./.scaffolding/agents/service-detection.md) | **ADR**: [0008](./
+**Reference**: [`.scaffolding/agents/service-detection.md`](https://github.com/matheme-justyn/ai-skill-web/blob/main/agents/service-detection.md) | **ADR**: [0008](./
 .scaffolding/docs/adr/0008-opencode-config-claude-code-reference.md)
 
 ### Quick Protocol
@@ -475,7 +475,7 @@ Using: {chosen_alternative}
 | **Documentation** | — | `context7_query-docs`, `context7_resolve-library-id` | `context7_query-docs` |
 | **Web Fetch** | — | `webfetch` | `webfetch` (direct URL) |
 
-**Full details**: See [`.scaffolding/agents/service-detection.md`](./.scaffolding/agents/service-detection.md)
+**Full details**: See [`.scaffolding/agents/service-detection.md`](https://github.com/matheme-justyn/ai-skill-web/blob/main/agents/service-detection.md)
 
 
 ## Module Loading Protocol
@@ -544,7 +544,7 @@ manual_disabled = []
 | **PERFORMANCE_OPTIMIZATION** | `quality` contains `"performance"` | slow, optimize, performance, speed | `.scaffolding/docs/PERFORMANCE_OPTIMIZATION.md` |
 | **ACCESSIBILITY** | `quality` contains `"accessibility"` | a11y, WCAG, screen reader, keyboard | `.scaffolding/docs/ACCESSIBILITY.md` |
 
-**Full module list**: See [ADR 0012](./docs/adr/0012-module-system-and-conditional-loading.md)
+**Full module list**: See `docs/adr/0012-module-system-and-conditional-loading.md`
 
 ### TERMINOLOGY Loading Logic
 
@@ -700,9 +700,9 @@ manual_disabled = ["FRONTEND_PATTERNS"]
 
 ### Related Documentation
 
-- **[ADR 0012 - Module System & Conditional Loading](./docs/adr/0012-module-system-and-conditional-loading.md)** - Complete design decisions
+- **`docs/adr/0012-module-system-and-conditional-loading.md`** - Complete design decisions
 - **[config.toml.example](./config.toml.example)** - Configuration reference
-- **[Terminology README](./.scaffolding/docs/terminology/README.md)** - Terminology system guide
+- **[Terminology README](https://github.com/matheme-justyn/ai-skill-web/tree/main/docs)** - Terminology system guide
 
 
 ## AI Agent Communication Protocol

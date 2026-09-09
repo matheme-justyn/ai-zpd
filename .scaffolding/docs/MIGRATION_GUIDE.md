@@ -247,7 +247,7 @@ This provides backward compatibility while using 2.0.0.
 ## Support
 
 **Issues**: Open GitHub issue with tag `v2.0.0-migration`  
-**Documentation**: See [ADR 0012](./docs/adr/0012-module-system-and-conditional-loading.md)  
+**Documentation**: See `docs/adr/0012-module-system-and-conditional-loading.md`  
 **Configuration Reference**: See `config.toml.example`
 
 ---

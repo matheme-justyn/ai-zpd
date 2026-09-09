@@ -341,8 +341,8 @@ sqlite3 .opencode-data/opencode.db "SELECT COUNT(*) FROM session WHERE time_arch
 
 ### 文件
 - [ADR 0005 - OpenCode 工作流程](./../docs/adr/0005-single-instance-opencode-workflow.md)
-- [VSCode 配置說明](./../vscode/README.md)
-- [config.toml 設定參考](./../../config.toml)
+- `.vscode/`
+- [config.toml 設定參考](../../config.toml.example)
 
 ### 腳本
 - `.scaffolding/scripts/init-opencode.sh` - 自動化初始化

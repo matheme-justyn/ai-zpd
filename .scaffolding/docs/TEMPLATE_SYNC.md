@@ -40,7 +40,7 @@ git ls-remote --tags https://github.com/matheme-justyn/my-vibe-scaffolding.git
 
 ## 查看可用更新
 
-在模板 repository 的 [CHANGELOG.md](./CHANGELOG.md) 中查看各版本的變更內容，判斷是否需要更新。
+在模板 repository 的 [CHANGELOG.md](../CHANGELOG.md) 中查看各版本的變更內容，判斷是否需要更新。
 
 **語意化版本說明：**
 
@@ -250,7 +250,7 @@ git push origin main
 
 1. 查看模板的 [Issues](https://github.com/matheme-justyn/my-vibe-scaffolding/issues)
 2. 建立新的 Issue 描述你的問題
-3. 參考 [AGENTS.md](./AGENTS.md) 中的規範，確保操作符合專案風格
+3. 參考 [AGENTS.md](../../AGENTS.md) 中的規範，確保操作符合專案風格
 
 ---
 

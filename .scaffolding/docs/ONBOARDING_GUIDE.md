@@ -387,10 +387,10 @@ As an **author**:
 ```markdown
 ## Internal Documentation
 
-* [Architecture Overview](./docs/ARCHITECTURE.md)
-* [API Documentation](./docs/API.md)
-* [Database Schema](./docs/DATABASE.md)
-* [Deployment Guide](./docs/DEPLOYMENT.md)
+* `docs/ARCHITECTURE.md`
+* `docs/API.md`
+* `docs/DATABASE.md`
+* `docs/DEPLOYMENT.md`
 
 ## External Resources
 

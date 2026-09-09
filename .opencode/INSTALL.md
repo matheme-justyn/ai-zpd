@@ -256,8 +256,8 @@ This will diagnose Bun, uv, and MCP configuration issues.
 
 ## Learn More
 
-- [README Guide](./.scaffolding/docs/README_GUIDE.md) - How to write project README
-- [Documentation Guidelines](./.scaffolding/docs/DOCUMENTATION_GUIDELINES.md) - File organization
-- [Skills Usage Guide](./.scaffolding/docs/SKILLS_USAGE_GUIDE.md) - Using AI skills system
-- [License Guide](./.scaffolding/docs/PROJECT_LICENSE_GUIDE.md) - Choosing a license
-- [Contributing Guide](./.scaffolding/docs/PROJECT_CONTRIBUTING_GUIDE.md) - Setting contribution policy
+- README Guide - How to write project README
+- Documentation Guidelines - File organization
+- Skills Usage Guide - Using AI skills system
+- License Guide - Choosing a license
+- Contributing Guide - Setting contribution policy
