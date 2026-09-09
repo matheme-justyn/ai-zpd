@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `PR_LEASE_PROTOCOL.md` and ADR 0021 record three answers from the skeleton layer that the first draft had left as this layer's unstated assumptions: the carrier does **not** forbid persisting the capability — not persisting it is this layer's choice, and the door is unlocked for whoever wants to change it; there is no capability rotation and none planned, and adding one would be announced first; and `expires_at` is the acquiring end's clock judged by the observing end's, so `--ttl` has to exceed expected skew. Compare-and-swap still prevents double holding either way, so skew is a legibility problem in error messages rather than a correctness one.
+- The protocol document now states why this layer defaults to `--remote origin` while the carrier defaults to local — the resource being protected is on GitHub, and a local ref only serialises writers on one machine — and that holding a remote lease needs push permission, with read-only tokens limited to `inspect` and failure treated as not holding.
+
+
 ### Added
 
 - `.scaffolding/scripts/pr-lifecycle.sh`, `.scaffolding/docs/PR_LEASE_PROTOCOL.md` and ADR 0021: every automated write to a pull request's control plane — ready, draft, label, milestone, merge — now holds a lease first. The carrier is the skeleton layer's (`ai-scheme` `scripts/lease.py`); this is the protocol written against it. Reads need no lease, and neither do comments, which accumulate rather than overwrite.
