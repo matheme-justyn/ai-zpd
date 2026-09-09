@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `init-project.sh` aborted partway through both the install and update paths. Removing `install-hooks.sh` left three live call sites in it, and with `set -e` a missing command exits the script — so the primary install path broke at "步驟 8/10: Git Hooks 設定" and the update path at "步驟 3/3". The hook the script installed had already been pointing at a `.scaffolding/hooks/` directory that does not exist, so the step had nothing left to do; it is removed rather than repaired, and the remaining steps renumbered.
+- `smart-install.sh` and `health-check.sh` no longer print next-step advice naming deleted scripts, and `migrate-to-template-dir.sh` no longer rewrites an AGENTS.md path for one.
+- `smart-install.sh` detected a new project by testing for a `.template/` directory, a path from before the `.scaffolding/` rename, so that branch never matched and every project fell through to the "cannot determine state" default. Now tests `.scaffolding/`.
+- `smart-install.sh`'s update path was written as "run `update-from-template.sh` if present, otherwise do these steps inline". That script has never existed in this repo, so the guarded branch was dead and the fallback was always the real path. Flattened to the path that actually runs.
+- `test-template.sh` listed three deleted scripts as required files and invoked `generate-readme.sh`. Its README test now checks that the version badges match `.scaffolding/VERSION`, which is what has to hold since the generator was removed (ADR 0018).
+
+### Added
+
+- `ci.yml` now fails when a script invokes another `.scaffolding/scripts/*.sh` that does not exist. `bash -n` proves a script parses, not that what it calls is there — which is exactly why the `install-hooks.sh` breakage passed CI. The check found a second, pre-existing instance (`update-from-template.sh`) on its first run.
+
+
 ### Added
 
 - ADR 0019 and `.scaffolding/docs/OWNERSHIP.md`: every document under `.scaffolding/docs/` now has a recorded owning layer and a reason. ADR 0014 had left all 25 here by default, explicitly noting that was pending review rather than a judgement.

@@ -74,10 +74,7 @@ REQUIRED_FILES=(
     ".scaffolding/VERSION"
     ".scaffolding/CHANGELOG.md"
     ".scaffolding/scripts/init-project.sh"
-    ".scaffolding/scripts/bump-version.sh"
-    ".scaffolding/scripts/generate-readme.sh"
     ".scaffolding/scripts/sync-template.sh"
-    ".scaffolding/scripts/install-hooks.sh"
     "config.toml.example"
     "AGENTS.md"
     "LICENSE"
@@ -116,10 +113,7 @@ log_info "Checking script permissions..."
 
 SCRIPTS=(
     ".scaffolding/scripts/init-project.sh"
-    ".scaffolding/scripts/bump-version.sh"
-    ".scaffolding/scripts/generate-readme.sh"
     ".scaffolding/scripts/sync-template.sh"
-    ".scaffolding/scripts/install-hooks.sh"
     ".scaffolding/scripts/health-check.sh"
     ".scaffolding/scripts/smart-cleanup.sh"
 )
@@ -277,60 +271,30 @@ else
 fi
 
 # ============================================================================
-# Test 8: README Generation
+# Test 8: README badges match the template version
 # ============================================================================
-test_section "Test 8: README Generation"
+test_section "Test 8: README Version Badges"
 
-log_info "Testing README generation..."
+log_info "Checking README version badges..."
 
-# Backup existing READMEs
-if [[ -f "$PROJECT_ROOT/README.md" ]]; then
-    cp "$PROJECT_ROOT/README.md" "$PROJECT_ROOT/README.md.backup"
-fi
-if [[ -f "$PROJECT_ROOT/README.zh-TW.md" ]]; then
-    cp "$PROJECT_ROOT/README.zh-TW.md" "$PROJECT_ROOT/README.zh-TW.md.backup"
-fi
-
-# Generate READMEs
-if "$PROJECT_ROOT/.scaffolding/scripts/generate-readme.sh" > /dev/null 2>&1; then
-    log_success "README generation successful"
-    
-    # Check generated files
-    if [[ -f "$PROJECT_ROOT/README.md" ]] && [[ -f "$PROJECT_ROOT/README.zh-TW.md" ]]; then
-        log_success "Both language versions generated"
-        
-        # Check for new sections
-        if grep -q "Why \`.scaffolding/\`" "$PROJECT_ROOT/README.md"; then
-            log_success "  → .scaffolding/ rationale section present"
-        else
-            log_error "  → .scaffolding/ rationale section missing"
-        fi
-        
-        if grep -q "Service Detection" "$PROJECT_ROOT/README.md"; then
-            log_success "  → Service detection section present"
-        else
-            log_error "  → Service detection section missing"
-        fi
-        
-        if grep -q "Architecture" "$PROJECT_ROOT/README.md"; then
-            log_success "  → Architecture section present"
-        else
-            log_error "  → Architecture section missing"
-        fi
-    else
-        log_error "Missing generated README files"
+# The README generator was removed (ADR 0018): the READMEs are maintained by
+# hand, so what has to be tested is no longer "does generation work" but
+# "did the person remember". ci.yml enforces the same rule.
+TEMPLATE_VERSION=$(cat "$PROJECT_ROOT/.scaffolding/VERSION")
+for readme in README.md README.zh-TW.md; do
+    if [[ ! -f "$PROJECT_ROOT/$readme" ]]; then
+        log_error "$readme missing"
+        continue
     fi
-else
-    log_error "README generation failed"
-fi
-
-# Restore backups
-if [[ -f "$PROJECT_ROOT/README.md.backup" ]]; then
-    mv "$PROJECT_ROOT/README.md.backup" "$PROJECT_ROOT/README.md"
-fi
-if [[ -f "$PROJECT_ROOT/README.zh-TW.md.backup" ]]; then
-    mv "$PROJECT_ROOT/README.zh-TW.md.backup" "$PROJECT_ROOT/README.zh-TW.md"
-fi
+    badge=$(grep -o 'badge/version-[^-]*-blue' "$PROJECT_ROOT/$readme" | head -1 | sed 's|badge/version-||; s|-blue||')
+    if [[ -z "$badge" ]]; then
+        log_error "$readme has no version badge"
+    elif [[ "$badge" == "$TEMPLATE_VERSION" ]]; then
+        log_success "$readme badge matches: $badge"
+    else
+        log_error "$readme badge is $badge, expected $TEMPLATE_VERSION"
+    fi
+done
 
 # ============================================================================
 # Test 9: Template Generation (Simulated)

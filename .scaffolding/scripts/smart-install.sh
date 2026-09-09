@@ -30,7 +30,7 @@ if [ -f ".template-version" ]; then
     echo -e "${YELLOW}📦 偵測到已有專案（版本: $CURRENT_VERSION）${NC}"
     echo ""
 # 檢查 2: 是否是剛 clone 的新專案（有 .scaffolding/ 但沒 .template-version）
-elif [ -d ".template" ] && [ ! -f ".template-version" ]; then
+elif [ -d ".scaffolding" ] && [ ! -f ".template-version" ]; then
     PROJECT_MODE="new"
     echo -e "${GREEN}🆕 偵測到新專案${NC}"
     echo ""
@@ -67,42 +67,36 @@ elif [ "$PROJECT_MODE" = "update" ]; then
     echo ""
     
     # 執行增量更新
-    if [ -f ".scaffolding/scripts/update-from-template.sh" ]; then
-        ./.scaffolding/scripts/update-from-template.sh
+    # 這裡原本先找 update-from-template.sh，找不到才走下面的流程。那支腳本
+    # 在本 repo 從未存在，所以「找到」的那一支是死碼，實際上一直走的是這條。
+    echo "📝 更新關鍵檔案..."
+    
+    # 1. 更新 OpenCode 配置（不覆蓋使用者設定）
+    if [ ! -f ".vscode/settings.json" ] || ! grep -q "opencode.dataDir" .vscode/settings.json 2>/dev/null; then
+        echo "  → 設定 OpenCode 專案獨立資料庫..."
+        ./.scaffolding/scripts/init-opencode.sh
     else
-        echo -e "${YELLOW}⚠️  未找到 update-from-template.sh，執行手動更新流程${NC}"
-        echo ""
-        
-        # 手動更新關鍵檔案
-        echo "📝 更新關鍵檔案..."
-        
-        # 1. 更新 OpenCode 配置（不覆蓋使用者設定）
-        if [ ! -f ".vscode/settings.json" ] || ! grep -q "opencode.dataDir" .vscode/settings.json 2>/dev/null; then
-            echo "  → 設定 OpenCode 專案獨立資料庫..."
-            ./.scaffolding/scripts/init-opencode.sh
-        else
-            echo "  ✓ OpenCode 已配置"
-        fi
-        
-        # 2. 更新 .gitignore（只加新項目，不覆蓋）
-        echo "  → 更新 .gitignore..."
-        if ! grep -q "^\.opencode-data/$" .gitignore 2>/dev/null; then
-            echo "" >> .gitignore
-            echo "# OpenCode 專案獨立資料庫" >> .gitignore
-            echo ".opencode-data/" >> .gitignore
-        fi
-        
-        # 3. 更新版本記錄
-        echo "$TEMPLATE_VERSION" > .template-version
-        
-        echo ""
-        echo -e "${GREEN}✅ 更新完成！${NC}"
-        echo ""
-        echo -e "${YELLOW}⚠️  重要提醒：${NC}"
-        echo "  1. 重啟 VSCode 讓 OpenCode 配置生效"
-        echo "  2. 檢查 .scaffolding/CHANGELOG.md 查看完整更新內容"
-        echo "  3. 如需更多功能，參考 .scaffolding/docs/TEMPLATE_SYNC.md"
+        echo "  ✓ OpenCode 已配置"
     fi
+    
+    # 2. 更新 .gitignore（只加新項目，不覆蓋）
+    echo "  → 更新 .gitignore..."
+    if ! grep -q "^\.opencode-data/$" .gitignore 2>/dev/null; then
+        echo "" >> .gitignore
+        echo "# OpenCode 專案獨立資料庫" >> .gitignore
+        echo ".opencode-data/" >> .gitignore
+    fi
+    
+    # 3. 更新版本記錄
+    echo "$TEMPLATE_VERSION" > .template-version
+    
+    echo ""
+    echo -e "${GREEN}✅ 更新完成！${NC}"
+    echo ""
+    echo -e "${YELLOW}⚠️  重要提醒：${NC}"
+    echo "  1. 重啟 VSCode 讓 OpenCode 配置生效"
+    echo "  2. 檢查 .scaffolding/CHANGELOG.md 查看完整更新內容"
+    echo "  3. 如需更多功能，參考 .scaffolding/docs/TEMPLATE_SYNC.md"
 fi
 
 echo ""
@@ -110,7 +104,6 @@ echo -e "${BLUE}📖 後續步驟：${NC}"
 if [ "$PROJECT_MODE" = "new" ]; then
     echo "  1. 編輯 config.toml 設定語言偏好"
     echo "  2. 更新 README.md 為你的專案描述"
-    echo "  3. 執行 .scaffolding/scripts/install-hooks.sh 安裝 Git hooks"
 else
     echo "  1. 重啟 VSCode"
     echo "  2. 驗證 OpenCode 配置：ls -la .opencode-data/"
