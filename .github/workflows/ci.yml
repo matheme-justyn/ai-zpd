@@ -13,124 +13,110 @@ jobs:
   validation:
     name: Comprehensive Validation
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: |
-          pip install toml pyyaml
-      
+          pip install toml
+
       - name: Run validation scripts
         run: |
-          echo "Running v3.0.0 scaffolding validation..."
+          # Scope: this workflow validates only what ai-zpd owns after the
+          # three-repo split (ADR 0014) — the install/run mechanism and the
+          # config and version files that drive it. Checks for skills, agent
+          # roles and SDD content were removed when that content moved to
+          # ai-skill-web; those layers validate their own content.
+          echo "Running ai-zpd mechanism-layer validation..."
           echo ""
-          
-          # Track overall status
+
           VALIDATION_PASSED=true
-          
+
           # 1. Script syntax validation
           echo "================================================"
           echo "  1. Script Syntax Validation"
           echo "================================================"
-          
-          SCRIPTS=(
-            ".scaffolding/scripts/init-project.sh"
-            ".scaffolding/scripts/configure-project-type.sh"
-            ".scaffolding/scripts/generate-pr-template.sh"
-            ".scaffolding/scripts/generate-readme.sh"
-            ".scaffolding/scripts/bump-version.sh"
-            ".scaffolding/scripts/install-hooks.sh"
-            ".scaffolding/scripts/upgrade-to-v3.sh"
-          )
-          
-          for script in "${SCRIPTS[@]}"; do
-            if [ -f "$script" ]; then
+
+          # Globbed rather than listed: a hardcoded list silently degrades to a
+          # non-failing "not found" warning when a script is deleted, so it
+          # stops covering anything. The glob always covers what is actually
+          # there, and needs no edit when scripts are added or removed.
+          if [ ! -d ".scaffolding/scripts" ]; then
+            echo "✗ .scaffolding/scripts/ not found"
+            VALIDATION_PASSED=false
+          else
+            SCRIPT_COUNT=0
+            for script in .scaffolding/scripts/*.sh; do
+              [ -e "$script" ] || continue
+              SCRIPT_COUNT=$((SCRIPT_COUNT + 1))
               if bash -n "$script" 2>/dev/null; then
                 echo "✓ $script"
               else
                 echo "✗ $script (syntax error)"
+                bash -n "$script" 2>&1 | sed 's/^/    /'
                 VALIDATION_PASSED=false
               fi
+            done
+
+            if [ "$SCRIPT_COUNT" -eq 0 ]; then
+              echo "✗ no shell scripts found under .scaffolding/scripts/"
+              VALIDATION_PASSED=false
             else
-              echo "⚠ $script (not found)"
+              echo ""
+              echo "  $SCRIPT_COUNT script(s) checked"
             fi
-          done
-          
+          fi
+
           echo ""
-          
+
           # 2. Configuration validation
           echo "================================================"
           echo "  2. Configuration Validation"
           echo "================================================"
-          
+
+          # ai-zpd owns config.toml (TOML). ai-scheme's .scheme/config.yml is
+          # not validated here and must not be — neither layer reads or parses
+          # the other's config file (ADR 0015).
           if [ -f "config.toml.example" ]; then
             if python3 -c "import toml; toml.load(open('config.toml.example'))" 2>/dev/null; then
               echo "✓ config.toml.example is valid TOML"
             else
               echo "✗ config.toml.example has syntax errors"
-              python3 -c "import toml; toml.load(open('config.toml.example'))" 2>&1
+              python3 -c "import toml; toml.load(open('config.toml.example'))" 2>&1 | sed 's/^/    /'
               VALIDATION_PASSED=false
             fi
           else
             echo "✗ config.toml.example not found"
             VALIDATION_PASSED=false
           fi
-          
+
           echo ""
-          
-          # 3. v3.0.0 Skills validation
+
+          # 3. Documentation validation
           echo "================================================"
-          echo "  3. Skills Validation (v3.0.0)"
+          echo "  3. Documentation Validation"
           echo "================================================"
-          
-          SKILL_DIRS=(
-            ".scaffolding/agents/skills/backend"
-            ".scaffolding/agents/skills/frontend"
-            ".scaffolding/agents/skills/universal"
-            ".scaffolding/agents/skills/testing"
-            ".scaffolding/agents/skills/sdd"
-          )
-          
-          MISSING_SKILLS=0
-          for dir in "${SKILL_DIRS[@]}"; do
-            if [ -d "$dir" ]; then
-              skill_count=$(find "$dir" -name "*.md" -type f | wc -l)
-              echo "✓ $dir ($skill_count skills)"
-            else
-              echo "✗ $dir (not found)"
-              MISSING_SKILLS=$((MISSING_SKILLS + 1))
-            fi
-          done
-          
-          if [ $MISSING_SKILLS -gt 0 ]; then
-            echo "⚠ $MISSING_SKILLS skill directories missing"
-          fi
-          
-          echo ""
-          
-          # 4. Documentation validation
-          echo "================================================"
-          echo "  4. Documentation Validation"
-          echo "================================================"
-          
+
+          # Only files whose absence means this repo is broken. Documents whose
+          # owning layer is still undecided are deliberately not listed — see
+          # issue #8. Requiring a document this layer may not own is what made
+          # this workflow permanently red after the split.
           REQUIRED_DOCS=(
             "README.md"
             "CHANGELOG.md"
+            "AGENTS.md"
+            "VERSION"
             ".scaffolding/CHANGELOG.md"
             ".scaffolding/VERSION"
-            "VERSION"
-            "AGENTS.md"
-            ".scaffolding/docs/MIGRATION_GUIDE_V3.md"
-            ".scaffolding/docs/adr/0013-skills-architecture-superpowers-strictness-ecc-coverage.md"
           )
-          
+
           MISSING_DOCS=0
           for doc in "${REQUIRED_DOCS[@]}"; do
             if [ -f "$doc" ]; then
@@ -140,19 +126,22 @@ jobs:
               MISSING_DOCS=$((MISSING_DOCS + 1))
             fi
           done
-          
+
           if [ $MISSING_DOCS -gt 0 ]; then
             echo "✗ $MISSING_DOCS required document(s) missing"
             VALIDATION_PASSED=false
           fi
-          
+
           echo ""
-          
-          # 5. Version sync validation
+
+          # 4. Version sync validation
           echo "================================================"
-          echo "  5. Version Sync Validation"
+          echo "  4. Version Sync Validation"
           echo "================================================"
-          
+
+          # This is currently the only executing implementation of the dual
+          # VERSION invariant — check-version-sync.sh never runs, because its
+          # [project].mode trigger exits early in project mode (issue #6).
           if [ -f ".scaffolding/VERSION" ] && [ -f "VERSION" ]; then
             SCAFFOLD_VERSION=$(cat .scaffolding/VERSION)
             ROOT_VERSION=$(cat VERSION)
@@ -166,15 +155,15 @@ jobs:
             echo "✗ VERSION files missing"
             VALIDATION_PASSED=false
           fi
-          
+
           echo ""
-          
+
           # Final summary
           echo "================================================"
           echo "  Validation Summary"
           echo "================================================"
           echo ""
-          
+
           if [ "$VALIDATION_PASSED" = true ]; then
             echo "✅ All validations passed"
             exit 0
@@ -184,136 +173,3 @@ jobs:
             echo "Please review the errors above and fix them."
             exit 1
           fi
-          
-          MISSING_MODULES=0
-          for module in "${CORE_MODULES[@]}"; do
-            if [ -f "$module" ]; then
-              echo "✓ $(basename $module)"
-            else
-              echo "✗ $(basename $module) missing"
-              MISSING_MODULES=$((MISSING_MODULES + 1))
-            fi
-          done
-          
-          if [ $MISSING_MODULES -gt 0 ]; then
-            echo "⚠ $MISSING_MODULES core module(s) missing (expected in v2.0.0)"
-            # Don't fail - modules may not all exist yet
-          fi
-          
-          echo ""
-          
-          # 4. Terminology files validation
-          echo "================================================"
-          echo "  4. Terminology Files Validation"
-          echo "================================================"
-          
-          TERM_FILES=(
-            ".scaffolding/docs/terminology/README.md"
-            ".scaffolding/docs/terminology/terminology.md"
-            ".scaffolding/docs/terminology/software/common.md"
-            ".scaffolding/docs/terminology/academic/common.md"
-          )
-          
-          MISSING_TERMS=0
-          for file in "${TERM_FILES[@]}"; do
-            if [ -f "$file" ]; then
-              echo "✓ $(basename $(dirname $file))/$(basename $file)"
-            else
-              echo "✗ $(basename $(dirname $file))/$(basename $file) missing"
-              MISSING_TERMS=$((MISSING_TERMS + 1))
-            fi
-          done
-          
-          if [ $MISSING_TERMS -gt 0 ]; then
-            echo "✗ $MISSING_TERMS terminology file(s) missing"
-            VALIDATION_PASSED=false
-          fi
-          
-          echo ""
-          
-          # 5. PR template validation
-          echo "================================================"
-          echo "  5. PR Template Validation"
-          echo "================================================"
-          
-          PR_TEMPLATES=(
-            ".scaffolding/templates/pr/template.en-US.md"
-            ".scaffolding/templates/pr/template.zh-TW.md"
-            ".scaffolding/templates/pr/template.zh-CN.md"
-            ".scaffolding/templates/pr/template.ja-JP.md"
-          )
-          
-          MISSING_PR=0
-          for template in "${PR_TEMPLATES[@]}"; do
-            if [ -f "$template" ]; then
-              echo "✓ $(basename $template)"
-            else
-              echo "✗ $(basename $template) missing"
-              MISSING_PR=$((MISSING_PR + 1))
-            fi
-          done
-          
-          if [ $MISSING_PR -gt 0 ]; then
-            echo "✗ $MISSING_PR PR template(s) missing"
-            VALIDATION_PASSED=false
-          fi
-          
-          echo ""
-          
-          # 6. Documentation validation
-          echo "================================================"
-          echo "  6. Documentation Validation"
-          echo "================================================"
-          
-          REQUIRED_DOCS=(
-            "README.md"
-            "CHANGELOG.md"
-            ".scaffolding/CHANGELOG.md"
-            "docs/adr/0012-module-system-and-conditional-loading.md"
-            "MIGRATION_GUIDE.md"
-          )
-          
-          MISSING_DOCS=0
-          for doc in "${REQUIRED_DOCS[@]}"; do
-            if [ -f "$doc" ]; then
-              echo "✓ $doc"
-            else
-              echo "✗ $doc missing"
-              MISSING_DOCS=$((MISSING_DOCS + 1))
-            fi
-          done
-          
-          if [ $MISSING_DOCS -gt 0 ]; then
-            echo "✗ $MISSING_DOCS required document(s) missing"
-            VALIDATION_PASSED=false
-          fi
-          
-          echo ""
-          
-          # Final summary
-          echo "================================================"
-          echo "  Validation Summary"
-          echo "================================================"
-          echo ""
-          
-          if [ "$VALIDATION_PASSED" = true ]; then
-            echo "✅ All validations passed!"
-            echo ""
-            echo "Scaffolding is in good health 🎉"
-            exit 0
-          else
-            echo "❌ Some validations failed"
-            echo ""
-            echo "Please review the errors above and fix them."
-            exit 1
-          fi
-      
-      - name: Upload validation report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: validation-report
-          path: |
-            **/*.log
-            **/test-results/**
-          retention-days: 30
