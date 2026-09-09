@@ -4,7 +4,7 @@ ADR 0014 把三倉拆分時，`.scaffolding/docs/` 下的 25 份文件**預設**
 
 新增文件到 `.scaffolding/docs/` 時請一併在此登錄擁有層與理由。
 
-## 留在 ai-zpd（原 25 份中的 7 份，加上後來新增的 1 份）
+## 留在 ai-zpd（原 25 份中的 7 份，加上後來新增的 2 份）
 
 這些描述的是安裝／執行機制——ai-zpd 在 ADR 0014 下的職責範圍。
 
@@ -18,6 +18,7 @@ ADR 0014 把三倉拆分時，`.scaffolding/docs/` 下的 25 份文件**預設**
 | `QUICK_UPDATE.md` | 既有專案的快速更新指示 |
 | `PRD-claude-code-inspired-upgrades.md` | OpenCode 進階功能的設計文件，主題屬機制層 |
 | `CONFIG_LAYERS.md` | **後來新增**（[#9](https://github.com/matheme-justyn/ai-zpd/issues/9)）。向使用者說明兩層設定檔的職責邊界。寫在本層是因為使用者是從本層的安裝流程進入的；骨架層另有自己角度的 `.scheme/README.md` |
+| `PR_LEASE_PROTOCOL.md` | **後來新增**（[#4](https://github.com/matheme-justyn/ai-zpd/issues/4)）。PR 控制面寫入的 lease 協定。協定屬機制層（agent session 之間的協調行為），載體屬骨架層 |
 
 兩份 migration guide 與 `QUICK_UPDATE.md` 是舊版專案唯一的升級路徑，所以留著。它們的退場條件是 `ai-scheme` 的 `adopt` 生命週期指令落地後接手同一件事——屆時應重新檢討，不是無限期保留。
 
