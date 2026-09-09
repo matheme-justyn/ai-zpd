@@ -6,28 +6,37 @@ This scaffolding provides AI agent support, i18n, version management, and best p
 
 ## 🚀 Quick Install (Recommended)
 
-**One command handles both installation and updates:**
+A project keeps up with **two** things. This document covers the second one.
+
+| Axis | Covers | Version lives in | Command |
+| --- | --- | --- | --- |
+| Skeleton | CI, policies, conventions, release flow | `.scheme/config.yml` | `ai-scheme status --json` |
+| Mechanism | agent tooling and its delivery directory | `.template-version` | `./.scaffolding/scripts/init-project.sh` |
+
+**One command handles both installation and updates for the mechanism layer:**
 
 ```bash
 ./.scaffolding/scripts/init-project.sh
 ```
 
+It reports the skeleton layer's state first — asking `ai-scheme`, never guessing from what is on disk — and then does its own work. It will not run the skeleton layer's `next_command` for you: those commands produce a plan first, and the plan is for you to read.
+
+If `ai-scheme` is not installed, the skeleton state is reported as unknown. That is the honest answer, not a problem with this script, and the mechanism-layer install proceeds either way — the two axes are independent.
+
 **The script automatically detects:**
 
 - **New project** (no `.template-version` file):
   - Creates project-specific files (VERSION, README, etc.)
-  - Sets up Git hooks
   - Initializes OpenCode configuration
   - Creates `.template-version` for tracking
 
 - **Existing project** (`.template-version` exists):
   - Consolidates agent configs (`.claude`, `.roo` → `.agents`)
   - Updates template version tracking
-  - Reinstalls Git hooks
   - Preserves all your customizations
 
 **Benefits:**
-- ✅ Single command for install and update
+- ✅ Single command for install and update, on this axis
 - ✅ Auto-detects project state
 - ✅ Safe: Won't overwrite your README/LICENSE/custom files
 - ✅ Smart: Only updates what's needed
@@ -110,7 +119,6 @@ The script detects you have `.template-version` and runs update mode automatical
 **What gets updated:**
 - `.scaffolding/` directory (framework files)
 - OpenCode configuration
-- Git hooks
 - Agent configs consolidated to `.agents/`
 
 **What stays unchanged:**

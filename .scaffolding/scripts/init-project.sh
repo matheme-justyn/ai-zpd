@@ -40,13 +40,26 @@ if [ ! -f ".scaffolding/VERSION" ]; then
     exit 1
 fi
 
-# 讀取模板版本
+# 骨架層狀態：問，不猜。
+#
+# 一個專案要跟上兩件事：骨架層（CI、policies、conventions、release flow，版本
+# 記在 .scheme/config.yml）與機制層（本層，版本記在 .template-version）。這支
+# 腳本只負責後者。前者的狀態一律向 ai-scheme 查詢後原樣轉述，不從檔案系統推測。
+# 見 ADR 0020 與 ai-scheme 的 docs/status-interface-contract.md。
+#
+# 查詢失敗（未安裝、或 status 自己說答不出來）不阻擋本層的工作——那兩件事互相
+# 獨立——但也不會被當成「沒事」帶過。
+echo -e "${BLUE}🔎 骨架層狀態${NC}"
+./.scaffolding/scripts/scheme-status.sh || true
+echo ""
+
+# 讀取模板版本（機制層這條軸，由本層自己判斷）
 TEMPLATE_VERSION=$(cat .scaffolding/VERSION)
 
 if [ "$MODE" = "update" ]; then
     OLD_VERSION=$(cat .template-version)
-    echo -e "${BLUE}📦 目前專案使用的模板版本: $OLD_VERSION${NC}"
-    echo -e "${BLUE}📦 最新模板版本: $TEMPLATE_VERSION${NC}"
+    echo -e "${BLUE}📦 機制層：目前專案使用的模板版本: $OLD_VERSION${NC}"
+    echo -e "${BLUE}📦 機制層：最新模板版本: $TEMPLATE_VERSION${NC}"
     echo ""
     
     if [ "$OLD_VERSION" = "$TEMPLATE_VERSION" ]; then
