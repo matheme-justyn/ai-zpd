@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- `CI - Scaffolding Validation` now validates only what this layer owns after the three-repo split (ADR 0014). The workflow had been failing on every push to `main` since the split because `REQUIRED_DOCS` demanded ADR 0013, which moved to `ai-skill-web` — a permanently red check stops functioning as a check, and it was masking the one executing implementation of the dual VERSION invariant (issue #6). Script syntax validation is now globbed over `.scaffolding/scripts/*.sh` instead of a hardcoded list, so deleting a script cannot silently downgrade the check to a non-failing warning.
+
+### Removed
+
+- Skills validation section of `CI - Scaffolding Validation`. All five `.scaffolding/agents/skills/*` directories it checked no longer exist — nor does `.scaffolding/agents/` — and the section only ever printed a warning, so it could not fail on anything.
+- 122 lines of unreachable code after the summary `exit` in the same workflow step, referencing an undefined `CORE_MODULES`.
+- `.github/workflows/ci-placeholder.yml`. It provided a `CI` status check that always passed without running a single real validation, sitting next to a real check that always failed. The v3.0.0 changelog entry recorded it as pending replacement by `ci.yml`; that replacement happened and the placeholder was never removed.
+- `.github/workflows/validate-config.yml.disabled`, `validate-modules.yml.disabled`, `validate-pr-templates.yml.disabled`. All three target paths that no longer exist (`.scaffolding/docs/modules/`, `.scaffolding/docs/terminology/`, `.scaffolding/templates/pr/`), so none could be re-enabled as written.
+
 ## [4.0.2] - 2026-09-08
 
 ### Added
