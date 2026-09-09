@@ -118,59 +118,78 @@ YourProject is a [brief project description].
 
 **This scaffolding's most important design principle: One command for everything.**
 
+A project keeps up with **two** things, and one command answers for each. Run them in this order:
+
 ```bash
-# Whether first-time installation or update, AI agents always use:
-./.scaffolding/scripts/init-project.sh
+ai-scheme status --json                    # 1. skeleton layer: ask, do not guess
+./.scaffolding/scripts/init-project.sh     # 2. mechanism layer: this repo
 ```
 
-**The script automatically detects context:**
-- **First-time mode** (no `.template-version` file) → Initialize new project
-- **Update mode** (`.template-version` exists) → Update template configuration
+| Axis | Covers | Version lives in | Who answers |
+| --- | --- | --- | --- |
+| Skeleton | CI, policies, conventions, release flow | `.scheme/config.yml` | `ai-scheme status` |
+| Mechanism | agent tooling and its delivery directory | `.template-version` | `init-project.sh` |
 
-**When AI agents should run this command:**
+**Step 1 — never infer the skeleton layer's state.** Not from `.template-version`, not from a `VERSION` file, not from what is on disk. Run `ai-scheme status --json`, read `state` and `next_command`, and run `next_command` — every lifecycle command produces a plan first, and the plan is for a person to see before anything is applied.
+
+Three results that are not "no work to do":
+
+- **Exit `2`** — it could not answer. Read `reason` and fix the cause. This is not an invitation to guess.
+- **`drift` or `policy_drift` is `"unknown"`** — the check could not run. Reading it as `[]` claims something nobody verified.
+- **`ai-scheme` not installed** — the skeleton state is simply unknown here. Say so; do not substitute a guess from the filesystem.
+
+`ai-scheme status` exits `0` for **any** state it could determine, including one needing work. "An update is available" is `0` with `state: update`, not a non-zero exit.
+
+`init-project.sh` prints this report itself before doing its own work, via `.scaffolding/scripts/scheme-status.sh`. It never runs `next_command` for you.
+
+**Step 2 — the mechanism layer reads its own version file.** That is not a contradiction of step 1: the rule against inferring state binds the skeleton layer only, and `ai-scheme` has no idea what this layer's target version is, so it does not answer for it. See ADR 0020 and `ai-scheme`'s `docs/status-interface-contract.md`.
+
+`init-project.sh` detects its own context:
+- **First-time mode** (no `.template-version`) → initialize
+- **Update mode** (`.template-version` exists) → update
+
+**When AI agents should run this:**
 - User says: "setup project", "initialize", "configure"
 - User says: "update template", "upgrade", "sync template"
-- Missing required files detected (VERSION, git hooks, etc.)
+- Missing required files detected
 - User wants latest template features
 - Need to consolidate scattered agent configurations
 
-**Key benefit**: Users and AI agents don't need to remember different commands for different scenarios.
-
-**Design rationale**: This unified interface reduces cognitive load and prevents confusion between "install" vs "update" workflows. The script's auto-detection ensures the correct behavior based on project state.
+`current` with `next_command: null` from step 1 means the *skeleton* layer has nothing to do. It says nothing about step 2.
 
 ---
 
-### Installation & Update (Project Mode)
+### Installation & Update
 
-**Single command handles both first-time setup and updates:**
+**One command handles both first-time setup and updates for this layer:**
 
 ```bash
 ./.scaffolding/scripts/init-project.sh
 ```
+
+It reports the skeleton layer's state first (see above), then does its own work.
 
 **The script auto-detects mode:**
 
 - **First-time mode** (no `.template-version` file exists):
   - Creates project-specific files (VERSION, README, etc.)
-  - Sets up Git hooks
   - Initializes OpenCode configuration
   - Creates `.template-version` for tracking
 
 - **Update mode** (`.template-version` file exists):
   - Consolidates agent configs (`.claude`, `.roo` → `.agents`)
   - Updates template version tracking
-  - Reinstalls Git hooks (may have new features)
   - Preserves all user customizations
 
 **When to run this command:**
 
 - User mentions "setup", "initialize", "configure" the project
 - User mentions "update template", "upgrade", "sync template"
-- Missing required files detected (VERSION, git hooks, etc.)
+- Missing required files detected
 - User wants latest template features
 - Need to consolidate scattered agent configurations
 
-### Template Development (Scaffolding Mode)
+### Template Development
 
 When developing the template itself, modifications go to `.scaffolding/` directory:
 
@@ -327,7 +346,7 @@ These commands manage the scaffolding template itself:
 - **Init project**: `./.scaffolding/scripts/init-project.sh`
   - First-time project setup or template updates
   - Auto-detects: first-time mode (no `.template-version`) vs update mode (existing `.template-version`)
-  - Creates project files, sets up git hooks, initializes OpenCode config
+  - Reports the skeleton layer state, then creates project files and initializes OpenCode config
 
 - **Sync template**: `./.scaffolding/scripts/sync-template.sh`
   - Sync template changes from `.scaffolding/` to project root

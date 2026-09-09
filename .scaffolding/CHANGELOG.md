@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `.scaffolding/scripts/scheme-status.sh` and ADR 0020: the skeleton layer's state is now obtained from `ai-scheme status --json` and repeated verbatim, never inferred. The wrapper exists so that the three things easiest to simplify away — `"unknown"` is not `[]`, exit `2` is not "no work", `next_command` is printed and not run — have one identifiable place rather than being scattered through a long script.
+- `init-project.sh` reports that state before doing its own work. A failed or absent skeleton query does not block it — the two axes are independent — but it is never silently swallowed.
+
+### Changed
+
+- The unified prompt in `AGENTS.md` and `.opencode/INSTALL.md` no longer claims one command covers every situation. It covers one axis. A project keeps up with two: the skeleton (`.scheme/config.yml`, answered by `ai-scheme status`) and the mechanism (`.template-version`, answered by this layer). This layer reading its own version file is not a contradiction of "never infer state" — that rule binds the skeleton layer only, and `ai-scheme` has no idea what this layer's target version is, so it does not answer for it.
+- Removed the remaining claims that installing or updating sets up Git hooks. The hooks and their installer were removed earlier; the documents had kept describing them.
+
+
 ### Removed
 
 - `generate-pr-template.sh`. It read `.scaffolding/templates/pr/`, a directory that no longer exists, so it could not run. PR-template generation belongs to the skeleton layer (ADR 0014); `ai-scheme` has said it will not take this script, because that layer ships a single-structure `.github/PULL_REQUEST_TEMPLATE.md` from its CLI rather than from a shell script, with multi-language versions tracked separately. Deleted rather than handed over.
