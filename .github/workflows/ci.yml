@@ -112,7 +112,6 @@ jobs:
             "README.md"
             "CHANGELOG.md"
             "AGENTS.md"
-            "VERSION"
             ".scaffolding/CHANGELOG.md"
             ".scaffolding/VERSION"
           )
@@ -134,25 +133,31 @@ jobs:
 
           echo ""
 
-          # 4. Version sync validation
+          # 4. Version format validation
           echo "================================================"
-          echo "  4. Version Sync Validation"
+          echo "  4. Version Validation"
           echo "================================================"
 
-          # This is currently the only executing implementation of the dual
-          # VERSION invariant — check-version-sync.sh never runs, because its
-          # [project].mode trigger exits early in project mode (issue #6).
-          if [ -f ".scaffolding/VERSION" ] && [ -f "VERSION" ]; then
-            SCAFFOLD_VERSION=$(cat .scaffolding/VERSION)
-            ROOT_VERSION=$(cat VERSION)
-            if [ "$SCAFFOLD_VERSION" == "$ROOT_VERSION" ]; then
-              echo "✓ Version files in sync: $SCAFFOLD_VERSION"
-            else
-              echo "✗ Version mismatch: .scaffolding/VERSION=$SCAFFOLD_VERSION, VERSION=$ROOT_VERSION"
-              VALIDATION_PASSED=false
-            fi
+          # .scaffolding/VERSION is the single source of truth for the template
+          # version (ADR 0016). It is what init-project.sh reads to produce a
+          # consuming project's .template-version, and it ships inside
+          # .scaffolding/, so it cannot be derived from anything at the root.
+          # The root VERSION file this used to be compared against was removed:
+          # in a consuming project the root VERSION holds that project's own
+          # version (init-project.sh seeds it at 0.1.0), so the two files only
+          # ever coincided inside this repo, where the root copy had no reader.
+          TEMPLATE_VERSION=$(cat .scaffolding/VERSION)
+          if printf '%s' "$TEMPLATE_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)*$'; then
+            echo "✓ Template version is valid SemVer: $TEMPLATE_VERSION"
           else
-            echo "✗ VERSION files missing"
+            echo "✗ .scaffolding/VERSION is not valid SemVer: '$TEMPLATE_VERSION'"
+            VALIDATION_PASSED=false
+          fi
+
+          if [ -f "VERSION" ]; then
+            echo "✗ a root VERSION file is present"
+            echo "    This repo has a single version source, .scaffolding/VERSION (ADR 0016)."
+            echo "    A root VERSION reintroduces the drift the collapse removed."
             VALIDATION_PASSED=false
           fi
 

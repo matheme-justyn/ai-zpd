@@ -170,13 +170,6 @@ Please follow these steps:
 
 Only want specific features? Pick what you need:
 
-#### Version Management + Git Hooks
-```bash
-curl -o .git/hooks/pre-push https://raw.githubusercontent.com/matheme-justyn/my-vibe-scaffolding/main/.scaffolding/hooks/pre-push
-chmod +x .git/hooks/pre-push
-echo "1.0.0" > VERSION
-```
-
 #### AI Agent Configuration
 ```bash
 curl -o AGENTS.md https://raw.githubusercontent.com/matheme-justyn/my-vibe-scaffolding/main/AGENTS.md
@@ -235,16 +228,6 @@ See `.scaffolding/docs/PROJECT_LICENSE_GUIDE.md` for guidance.
 ---
 
 ## Troubleshooting
-
-### "VERSION NOT UPDATED" error when pushing
-
-This is the version enforcement hook working correctly!
-
-Fix:
-```bash
-./.scaffolding/scripts/bump-version.sh patch  # or minor/major
-git push && git push --tags
-```
 
 ### Language not switching
 

@@ -136,6 +136,11 @@ echo ""
 
 PROJECT_MODE="unknown"
 
+# Deliberately reads [project].mode, a key since removed from
+# config.toml.example. This script migrates projects created before that
+# removal, so the config files it inspects still carry the old key; reading it
+# here is how the migration identifies what it is migrating, not a live
+# dependency on a key this repo still defines.
 if [ -f "config.toml" ]; then
     if grep -q 'mode = "scaffolding"' config.toml; then
         PROJECT_MODE="scaffolding"
