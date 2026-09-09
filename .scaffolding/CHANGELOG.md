@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `.scaffolding/scripts/pr-lifecycle.sh`, `.scaffolding/docs/PR_LEASE_PROTOCOL.md` and ADR 0021: every automated write to a pull request's control plane — ready, draft, label, milestone, merge — now holds a lease first. The carrier is the skeleton layer's (`ai-scheme` `scripts/lease.py`); this is the protocol written against it. Reads need no lease, and neither do comments, which accumulate rather than overwrite.
+- `merge` re-reads review decision, checks and merge state *inside* the lease and stops for a human whenever any of them cannot be shown to hold. That includes the empty cases — no review decision, no checks reported at all, `mergeStateStatus` of `UNKNOWN` — because an empty answer is indistinguishable from an answer that failed to arrive. It is the third time this session that "unknown" had to be kept distinct from "none", after `drift` in ADR 0020 and version sync in ADR 0016.
+- `AGENTS.md` now forbids calling `gh pr ready|edit|merge` directly, and states what exit `1` and exit `2` mean so neither can be read as "done".
+
+
+### Added
+
 - `.scaffolding/docs/CONFIG_LAYERS.md`, linked from both READMEs and `AGENTS.md`: why a project ends up with both `config.toml` and `.scheme/config.yml`, which one to edit, why the key names deliberately do not look alike, and the two version axes. Written now rather than earlier because the skeleton layer's `.scheme/config.yml` has actually landed — describing a file that did not yet exist was the reason this was deferred.
 - `ci.yml` fails when a script reaches for the pre-rename `.template/` path. `migrate-to-template-dir.sh` is exempt by a marker comment: migrating projects created before the rename is its whole purpose.
 

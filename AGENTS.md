@@ -161,6 +161,34 @@ The same two-layer split applies to configuration: `config.toml` is this layer's
 
 ---
 
+### Writing to a pull request
+
+**Never call `gh pr ready`, `gh pr edit`, or `gh pr merge` directly. Never `PATCH` `/pulls/` or send a GraphQL mutation.**
+
+Worktrees isolate files; they do not isolate ready/draft, labels, milestone or merge. Those live on GitHub and every session on the same pull request shares them. Two sessions writing at once race, and **the loser's change disappears with no error** — which is why this is a rule rather than a preference.
+
+```bash
+./.scaffolding/scripts/pr-lifecycle.sh ready     --pr <n>
+./.scaffolding/scripts/pr-lifecycle.sh draft     --pr <n>
+./.scaffolding/scripts/pr-lifecycle.sh label     --pr <n> --add <label> [--remove <label>]
+./.scaffolding/scripts/pr-lifecycle.sh milestone --pr <n> --set <milestone>
+./.scaffolding/scripts/pr-lifecycle.sh merge     --pr <n> [--method squash|merge|rebase]
+```
+
+Reads need no lease: `gh pr view`, `list`, `checks`, `diff`, and `gh pr comment` (comments accumulate, they do not overwrite).
+
+Three results are **not** "done":
+
+- **exit `1`** — a definite no: leased elsewhere, the head moved, or merge conditions are not met. Nothing was written.
+- **exit `2`** — could not determine: `gh` failed, or the lease carrier is missing. Not retried; a question that failed does not become a "no" by asking again.
+- **`--on-conflict` has no silent-skip value.** `report`, `wait` and `abort` all end non-zero without writing.
+
+`merge` re-reads review, checks and merge state *inside* the lease and stops for a human whenever any of them cannot be shown to hold — including the empty cases: no review decision, no checks reported at all, or a `mergeStateStatus` of `UNKNOWN`. **An unknown is not a yes.**
+
+Full protocol in [PR_LEASE_PROTOCOL.md](./.scaffolding/docs/PR_LEASE_PROTOCOL.md), rationale in ADR 0021.
+
+---
+
 ### Installation & Update
 
 **One command handles both first-time setup and updates for this layer:**
