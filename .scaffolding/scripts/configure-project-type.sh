@@ -280,20 +280,8 @@ cat > config.toml << EOF
 # Date: $(date +%Y-%m-%d)
 
 [project]
-# Project type determines which documentation modules are loaded
-# Options: frontend | backend | fullstack | cli | library | academic | documentation
-type = "$PROJECT_TYPE"
-
-# Project mode: "project" for using this scaffolding, "scaffolding" for developing the template itself
-mode = "project"
-
-# Features your project uses (determines which feature modules are loaded)
-# Available: api, database, auth, i18n, realtime, files
-features = $FEATURES_STR
-
-# Quality requirements (determines which quality modules are loaded)
-# Available: performance, accessibility
-quality = $QUALITY_STR
+# Project metadata only. Everything that selects documentation modules lives
+# under [modules] — see ADR 0017.
 
 EOF
 
@@ -327,13 +315,25 @@ EOF
 # 模組配置
 cat >> config.toml << EOF
 [modules]
-# Modules always loaded regardless of project type
+# Which domain's documentation modules to load
+# Options: frontend | backend | fullstack | cli | library | academic | documentation
+domain = "$PROJECT_TYPE"
+
+# Feature modules to load
+# Available: api, database, auth, i18n, realtime, files
+features = $FEATURES_STR
+
+# Quality modules to load
+# Available: performance, accessibility
+quality = $QUALITY_STR
+
+# Modules always loaded regardless of domain
 always_enabled = ["STYLE_GUIDE", "TERMINOLOGY", "GIT_WORKFLOW"]
 
-# Force-load additional modules (even if project type doesn't suggest them)
+# Force-load additional modules (even if the domain does not suggest them)
 manual_enabled = []
 
-# Disable modules even if project type suggests them
+# Disable modules even if the domain suggests them
 manual_disabled = []
 
 EOF
