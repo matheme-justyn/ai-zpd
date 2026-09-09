@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- ADR 0016: records that `.scaffolding/VERSION` is the single version source and why the root `VERSION` file could not simply be kept alongside it. The two files were never duplicates outside this repo — in a consuming project the root `VERSION` holds that project's own version, seeded at `0.1.0` by `init-project.sh`, while `.scaffolding/VERSION` is the template version that ships inside `.scaffolding/`.
+
+### Removed
+
+- Root `VERSION` file. Inside this repo it was a copy of `.scaffolding/VERSION` with no reader; the only consumers of the pair were the CI comparison and two scripts removed below.
+- `check-version-sync.sh`, `bump-version.sh`, `install-hooks.sh`. The whole version-sync mechanism is retired and is not taken over by the skeleton layer (`ai-scheme` #14, whose final acceptance item directs the deletion to happen here). `check-version-sync.sh` had never executed: its `[project].mode = "scaffolding"` trigger defaults to `project` when `config.toml` is absent, and this repo has only `config.toml.example`.
+- `[project].mode` from `config.toml.example`, with its ~15 lines of explanatory comment. The scaffolding/project distinction stopped being a state of one repo when the split made ai-zpd the template itself.
+- `sync-readme.sh`. Gated on a `config.toml` this repo does not have, a `mode` value it could not reach, and a `sync_readme` key that exists nowhere in the repo. `generate-readme.sh` already performs the same copy into `.scaffolding/`.
+- Git hook installation and version-bump instructions from `AGENTS.md` and `.opencode/INSTALL.md`, including the "VERSION NOT UPDATED" troubleshooting entry for a hook that no longer exists.
+
+### Changed
+
+- `ci.yml` version validation now checks that `.scaffolding/VERSION` is valid SemVer and that no root `VERSION` file has reappeared, replacing the two-file comparison. The second half gives the collapse an observable failure rather than relying on nobody recreating the file.
+- `analyze-conflicts.sh` no longer emits setup advice referencing `mode = "project"` and `install-hooks.sh`.
+- `migrate-to-template-dir.sh` keeps reading `[project].mode` deliberately, now with a comment explaining that it inspects configs written before the key was removed.
+
+
 ### Changed
 
 - `CI - Scaffolding Validation` now validates only what this layer owns after the three-repo split (ADR 0014). The workflow had been failing on every push to `main` since the split because `REQUIRED_DOCS` demanded ADR 0013, which moved to `ai-skill-web` — a permanently red check stops functioning as a check, and it was masking the one executing implementation of the dual VERSION invariant (issue #6). Script syntax validation is now globbed over `.scaffolding/scripts/*.sh` instead of a hardcoded list, so deleting a script cannot silently downgrade the check to a non-failing warning.

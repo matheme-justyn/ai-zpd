@@ -329,24 +329,11 @@ These commands manage the scaffolding template itself:
   - Auto-detects: first-time mode (no `.template-version`) vs update mode (existing `.template-version`)
   - Creates project files, sets up git hooks, initializes OpenCode config
 
-- **Bump version**: `./.scaffolding/scripts/bump-version.sh [patch|minor|major]`
-  - Update `.scaffolding/VERSION` and `VERSION` files
-  - Create git commit and tag
-  - Update `CHANGELOG.md` and `README.md` badges
-  - Usage:
-    - `./template/scripts/bump-version.sh patch` - Bug fixes (1.0.0 → 1.0.1)
-    - `./.scaffolding/scripts/bump-version.sh minor` - New features (1.0.0 → 1.1.0)
-    - `./.scaffolding/scripts/bump-version.sh major` - Breaking changes (1.0.0 → 2.0.0)
-
 - **Generate README**: `./.scaffolding/scripts/generate-readme.sh`
   - Generate `README.md` and `README.{lang}.md` from `i18n/locales/{lang}/readme.toml`
   - Sync to `.scaffolding/README.md` and `.scaffolding/README.{lang}.md`
   - Add language switcher links automatically
   - **CRITICAL**: Always use this script to update README, never edit README.md directly
-
-- **Sync README**: `./.scaffolding/scripts/sync-readme.sh`
-  - Sync root README files to `.scaffolding/` directory (if `sync_readme = true` in scaffolding mode)
-  - Used in scaffolding mode when developing the template itself
 
 - **Sync template**: `./.scaffolding/scripts/sync-template.sh`
   - Sync template changes from `.scaffolding/` to project root
@@ -359,13 +346,6 @@ These commands manage the scaffolding template itself:
     - `sync-template.sh -n` - Dry run (preview)
     - `sync-template.sh -e "docs/*"` - Exclude specific files
     - `sync-template.sh -f` - Force sync regardless of version
-
-### Git Hooks
-
-- **Install hooks**: `./.scaffolding/scripts/install-hooks.sh`
-  - Install pre-commit and pre-push git hooks
-  - Pre-push hook: Enforce version bump before pushing to main
-  - Location: `.git/hooks/`
 
 ### OpenCode Specific
 
@@ -403,24 +383,18 @@ These commands help manage OpenCode stability and workflow:
   - Check required files exist
   - Validate configuration format
 
-- **Check version sync**: `./.scaffolding/scripts/check-version-sync.sh`
-  - Ensure `.scaffolding/VERSION` and `VERSION` are in sync
-  - Used by pre-push git hook
-
 ### Usage Tips
 
-**For template maintainers** (scaffolding mode):
-- Use `bump-version.sh` before every commit to main
+**For template maintainers:**
+- The template version lives in `.scaffolding/VERSION` and nowhere else (ADR 0016). Edit it directly; there is no bump script and no pre-push version gate.
 - Run `generate-readme.sh` after updating i18n translation files
-- Use `sync-readme.sh` to keep `.scaffolding/` README in sync
 
-**For template users** (project mode):
+**For template users:**
 - Run `init-project.sh` once after creating project from template
 - Use development commands specific to your tech stack
 - Run `health-check.sh` if OpenCode becomes unstable
 
 **For all users**:
-- `install-hooks.sh` - Run once to set up automatic version enforcement
 - `verify-setup.sh` - Run to check configuration integrity
 
 

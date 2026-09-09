@@ -3,21 +3,6 @@
 # this just preserves the sections that were about runtime/install mechanism.
 
 [project]
-# Working mode: 'scaffolding' or 'project'
-#
-# - scaffolding: You're developing this scaffolding template itself
-#   → Scaffolding ADRs: .scaffolding/docs/adr/
-#   → Scaffolding scripts: .scaffolding/scripts/
-#   → Scaffolding assets: .scaffolding/assets/
-#   → Keep root docs/, scripts/, assets/ empty or minimal
-#
-# - project: You're using this scaffolding for your project
-#   → Project ADRs: docs/adr/
-#   → Project scripts: scripts/
-#   → Project assets: assets/
-#   → .scaffolding/ contains reference examples only
-mode = "project"  # Change to 'scaffolding' if developing the scaffolding itself
-
 # Project metadata
 # name = "my-project"
 # description = "Project description"
