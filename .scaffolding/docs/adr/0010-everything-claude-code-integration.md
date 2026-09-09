@@ -304,7 +304,7 @@ Added 2 new major sections:
 - **Source**: https://github.com/affaan-m/everything-claude-code
 - **Article**: https://www.blocktempo.com/hackathon-winner-claude-code-setup-revealed/
 - **PRD**: `docs/PRD-claude-code-inspired-upgrades.md`
-- **Previous ADR**: [ADR 0009: Reference Claude Code Architecture](./../.scaffolding/docs/adr/0009-reference-claude-code-architecture.md)
+- **Previous ADR**: [ADR 0009: Reference Claude Code Architecture](./0009-reference-claude-code-architecture.md)
 
 ## Date
 

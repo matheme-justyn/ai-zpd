@@ -369,7 +369,7 @@ task(
 
 ### Available Skills
 
-完整清單：[`.agents/skills/`](./.agents/skills/)
+完整清單：`.agents/skills/`
 ```
 
 **檔案結構**：
@@ -504,7 +504,7 @@ Priority 3 - Occasional Use (Week 3):
 
 ### General Rules
 
-參考：[`.agents/rules/common/`](./.agents/rules/common/)
+參考：`.agents/rules/common/`
 
 - **永遠先寫測試**：所有新功能和 bug 修復都必須先寫測試
 - **型別安全**：禁止使用 `as any`, `@ts-ignore`, `@ts-expect-error`
@@ -517,7 +517,7 @@ Priority 3 - Occasional Use (Week 3):
 ### Language-Specific Rules
 
 #### TypeScript
-參考：[`.agents/rules/typescript/rules.txt`](./.agents/rules/typescript/rules.txt)
+參考：`.agents/rules/typescript/rules.txt`
 
 - 使用 `interface` 而非 `type`（除非需要 union types）
 - 避免 `any`，使用 `unknown` 或具體型別
@@ -525,7 +525,7 @@ Priority 3 - Occasional Use (Week 3):
 - ... (更多規則)
 
 #### Python
-參考：[`.agents/rules/python/rules.txt`](./.agents/rules/python/rules.txt)
+參考：`.agents/rules/python/rules.txt`
 
 - 遵循 PEP 8
 - 使用 type hints

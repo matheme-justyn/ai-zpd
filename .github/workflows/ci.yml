@@ -181,6 +181,45 @@ jobs:
 
           echo ""
 
+          # 5. Relative link validation
+          echo "================================================"
+          echo "  5. Relative Link Validation"
+          echo "================================================"
+
+          # The split moved content out but left references behind, and a
+          # reference to a document this layer no longer owns is what kept
+          # CI red for weeks (#7). Ownership is now recorded per document in
+          # .scaffolding/docs/OWNERSHIP.md; this check is what keeps the two
+          # from drifting apart again.
+          BROKEN_LINKS=0
+          while IFS= read -r md; do
+            # ](target) where target is relative: no scheme, not an anchor
+            grep -o '](\.\{0,2\}/[^)#]*)' "$md" 2>/dev/null | sed 's/^](//; s/)$//' | while read -r target; do
+              echo "$md|$target"
+            done
+          # CHANGELOGs are excluded: they record what was true at each
+          # release, including paths that have since moved. Rewriting them
+          # to satisfy a link check would falsify the record.
+          done < <(find . -name '*.md' -not -path './.git/*' -not -name 'CHANGELOG.md') > /tmp/links.txt
+
+          while IFS='|' read -r md target; do
+            [ -z "$target" ] && continue
+            resolved="$(dirname "$md")/$target"
+            if [ ! -e "$resolved" ]; then
+              echo "✗ $md → $target"
+              BROKEN_LINKS=$((BROKEN_LINKS + 1))
+            fi
+          done < /tmp/links.txt
+
+          if [ "$BROKEN_LINKS" -gt 0 ]; then
+            echo "✗ $BROKEN_LINKS broken relative link(s)"
+            VALIDATION_PASSED=false
+          else
+            echo "✓ all relative links resolve ($(wc -l < /tmp/links.txt | tr -d ' ') checked)"
+          fi
+
+          echo ""
+
           # Final summary
           echo "================================================"
           echo "  Validation Summary"

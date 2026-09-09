@@ -116,7 +116,8 @@ ZPD 指的是學習者獨立能做到的、跟有適當協助下能做到的之�
 
 ## 📖 文件
 
-- 📖 **[完整功能說明](./.scaffolding/docs/FEATURES.md)** - 完整的 v2.0.0 技術文件
+- 📖 **[文件目錄](./.scaffolding/docs/)** - 設定指南、升級路徑與設計文件
+- 🗂️ **[文件歸屬](./.scaffolding/docs/OWNERSHIP.md)** - 每份文件由哪一層擁有，以及理由
 - 🤖 **[AGENTS.md](./AGENTS.md)** - AI agent 指令和編碼規範
 - 📝 **[CHANGELOG.md](./.scaffolding/CHANGELOG.md)** - 版本歷史和變更記錄
 

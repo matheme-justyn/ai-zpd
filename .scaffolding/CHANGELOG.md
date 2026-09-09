@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- ADR 0019 and `.scaffolding/docs/OWNERSHIP.md`: every document under `.scaffolding/docs/` now has a recorded owning layer and a reason. ADR 0014 had left all 25 here by default, explicitly noting that was pending review rather than a judgement.
+- `ci.yml` now validates every relative markdown link and fails on a broken one. The split moved content out but left references behind, and a reference to a document this layer no longer owns is what kept CI red for weeks (#7). CHANGELOGs are excluded — they record what was true at each release, and rewriting them to satisfy a link check would falsify the record.
+
+### Removed
+
+- Twelve documents from `.scaffolding/docs/`. Eight were pre-split one-time snapshots (`DIRECTORY_RESTRUCTURE_2026-03-27`, `PHASE_1A_COMPLETION`, `PHASE_1B_COMPLETION`, `RELEASE_V3.0.0_SUMMARY`, `V3.0.0_RELEASE_NOTES`, `V3_INTEGRATION_SUMMARY`, `V3_PHASE1A_SUMMARY`, plus `MODE_GUIDE` documenting the `[project].mode` key removed in ADR 0016); four were superseded by the split itself (`FEATURES.md`, `PRD.md`, `RELEASE_PROCESS.md`, `SCAFFOLDING_DEV_GUIDE.md`). Content remains in git history.
+
+### Changed
+
+- Forty broken relative links repaired across `AGENTS.md`, `.opencode/INSTALL.md`, four ADRs and five documents. Three distinct causes: paths that belong to a *consuming* project rather than this repo (now code spans, since they can never resolve here), content that moved to ai-skill-web (now absolute links there), and plain wrong relative depth.
+- Five documents are offered to ai-skill-web rather than moved unilaterally — the two SDD PRDs and three documentation modules identifiable by their `**Status**: Active | Domain: …` header. The rest of that module set is already in ai-skill-web's `docs/`; these were stragglers.
+
+
+### Added
+
 - ADR 0017: module-selection keys move under `[modules]`, and `[project].type` becomes `[modules].domain`.
 - ADR 0018: READMEs are maintained directly; the generator is removed and CI checks the version badges.
 

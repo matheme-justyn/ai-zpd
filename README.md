@@ -116,7 +116,8 @@ The `init-project.sh` script intelligently detects your situation:
 
 ## 📖 Documentation
 
-- 📖 **[Full Features](./.scaffolding/docs/FEATURES.md)** - Complete v2.0.0 technical documentation
+- 📖 **[Documentation](./.scaffolding/docs/)** - Setup guides, migration paths, and design documents
+- 🗂️ **[Document ownership](./.scaffolding/docs/OWNERSHIP.md)** - Which layer owns each document, and why
 - 🤖 **[AGENTS.md](./AGENTS.md)** - AI agent instructions and coding conventions
 - 📝 **[CHANGELOG.md](./.scaffolding/CHANGELOG.md)** - Version history and changes
 
