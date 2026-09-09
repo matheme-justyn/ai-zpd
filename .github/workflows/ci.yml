@@ -161,6 +161,24 @@ jobs:
             VALIDATION_PASSED=false
           fi
 
+          # The README version badges are maintained by hand since the generator
+          # that used to write them was removed (ADR 0018). Checking them here is
+          # what makes a stale badge fail rather than sit unnoticed — the previous
+          # badges were two patch versions behind, and a third was a whole major
+          # behind, precisely because nothing checked.
+          for readme in README.md README.zh-TW.md; do
+            BADGE_VERSION=$(grep -o 'badge/version-[^-]*-blue' "$readme" | head -1 | sed 's|badge/version-||; s|-blue||')
+            if [ -z "$BADGE_VERSION" ]; then
+              echo "✗ $readme has no version badge"
+              VALIDATION_PASSED=false
+            elif [ "$BADGE_VERSION" = "$TEMPLATE_VERSION" ]; then
+              echo "✓ $readme badge matches: $BADGE_VERSION"
+            else
+              echo "✗ $readme badge is $BADGE_VERSION, expected $TEMPLATE_VERSION"
+              VALIDATION_PASSED=false
+            fi
+          done
+
           echo ""
 
           # Final summary

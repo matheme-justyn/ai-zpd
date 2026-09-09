@@ -329,12 +329,6 @@ These commands manage the scaffolding template itself:
   - Auto-detects: first-time mode (no `.template-version`) vs update mode (existing `.template-version`)
   - Creates project files, sets up git hooks, initializes OpenCode config
 
-- **Generate README**: `./.scaffolding/scripts/generate-readme.sh`
-  - Generate `README.md` and `README.{lang}.md` from `i18n/locales/{lang}/readme.toml`
-  - Sync to `.scaffolding/README.md` and `.scaffolding/README.{lang}.md`
-  - Add language switcher links automatically
-  - **CRITICAL**: Always use this script to update README, never edit README.md directly
-
 - **Sync template**: `./.scaffolding/scripts/sync-template.sh`
   - Sync template changes from `.scaffolding/` to project root
   - Version comparison (.template-version vs .scaffolding/VERSION)
@@ -387,7 +381,7 @@ These commands help manage OpenCode stability and workflow:
 
 **For template maintainers:**
 - The template version lives in `.scaffolding/VERSION` and nowhere else (ADR 0016). Edit it directly; there is no bump script and no pre-push version gate.
-- Run `generate-readme.sh` after updating i18n translation files
+- Edit `README.md` and `README.zh-TW.md` directly; keep their version badges equal to `.scaffolding/VERSION`
 
 **For template users:**
 - Run `init-project.sh` once after creating project from template
@@ -487,13 +481,13 @@ Using: {chosen_alternative}
 ## Module Loading Protocol
 
 **Version**: 2.0.0  
-**Purpose**: Conditional loading of documentation modules based on project type and task context
+**Purpose**: Conditional loading of documentation modules based on the configured domain and task context
 
 ### Overview
 
 This scaffolding uses a **config-driven module system**. Instead of loading all documentation at once:
 
-1. AI agent reads `config.toml` to understand project type
+1. AI agent reads `config.toml` to understand which documentation domain is configured
 2. AI agent detects task keywords to determine needed modules
 3. AI agent loads ONLY relevant modules for the current task
 4. Token usage reduced by 70%+ compared to full-inline approach
@@ -517,16 +511,14 @@ This scaffolding uses a **config-driven module system**. Instead of loading all 
 **config.toml structure**:
 
 ```toml
-[project]
-type = "fullstack"  # frontend | backend | fullstack | cli | library | academic | documentation
-features = ["api", "database", "auth", "i18n"]
-quality = ["performance", "accessibility"]
-
 [academic]
 citation_style = "APA"  # APA | MLA | Chicago | IEEE
 field = "computer_science"
 
 [modules]
+domain = "fullstack"  # frontend | backend | fullstack | cli | library | academic | documentation
+features = ["api", "database", "auth", "i18n"]
+quality = ["performance", "accessibility"]
 always_enabled = ["STYLE_GUIDE", "TERMINOLOGY", "GIT_WORKFLOW"]
 manual_enabled = []
 manual_disabled = []
@@ -623,13 +615,13 @@ Override automatic loading in `config.toml`:
 
 ```toml
 [modules]
-# These modules ALWAYS load regardless of project type
+# These modules ALWAYS load regardless of domain
 always_enabled = ["STYLE_GUIDE", "TERMINOLOGY", "GIT_WORKFLOW", "SECURITY_CHECKLIST"]
 
 # Force-load additional modules
 manual_enabled = ["PERFORMANCE_OPTIMIZATION", "ACCESSIBILITY"]
 
-# Disable modules even if project type suggests them
+# Disable modules even if the domain suggests them
 manual_disabled = ["FRONTEND_PATTERNS"]
 ```
 
@@ -639,10 +631,10 @@ manual_disabled = ["FRONTEND_PATTERNS"]
 
 **On session start**:
 
-1. Read `config.toml` → identify project type, features, quality requirements
+1. Read `config.toml` → identify `[modules].domain`, features, quality requirements
 2. Check for manual module overrides (`manual_enabled`, `manual_disabled`)
 3. Load `always_enabled` modules
-4. Load type-based modules (e.g., FRONTEND_PATTERNS if type=frontend)
+4. Load domain-based modules (e.g., FRONTEND_PATTERNS if `domain = "frontend"`)
 5. Load feature-based modules (e.g., API_DESIGN if features contains "api")
 6. Load quality-based modules (e.g., ACCESSIBILITY if quality contains "accessibility")
 7. Load terminology files hierarchically
@@ -802,77 +794,27 @@ If a translation key is missing:
 - [ ] Set communication language to match `primary_locale`
 - [ ] Verify fallback locale is available
 
-### 6. README Generation Protocol
+### 6. README Maintenance
 
-**CRITICAL: README files are auto-generated from i18n translations. DO NOT edit README.md directly.**
+`README.md` and `README.zh-TW.md` are maintained directly. Edit them.
 
-### Workflow
+There used to be a generator, `generate-readme.sh`, and this section used to say
+in capitals that editing the READMEs by hand would be overwritten. Both claims
+had stopped being true, in a way that made following them destructive: the
+script declared `.scaffolding/i18n/locales/{lang}/readme.toml` as its source,
+that directory does not exist in this repo, and the content it wrote was
+hardcoded inline in the script itself — content from before the rename, titling
+the project "My Vibe Scaffolding" and linking to the old repository. Running it
+as instructed would have replaced the current READMEs with pre-split text. The
+script is removed (ADR 0018).
 
-1. **Edit translation files:**
-   ```bash
-   .scaffolding/i18n/locales/en-US/readme.toml
-   .scaffolding/i18n/locales/zh-TW/readme.toml
-   ```
+Two consequences worth knowing:
 
-2. **Generate README files:**
-   ```bash
-   ./.scaffolding/scripts/generate-readme.sh
-   ```
+- The version badge in each README is now maintained by hand. `ci.yml` checks it
+  against `.scaffolding/VERSION` and fails on a mismatch, so a stale badge is
+  caught rather than merely noticed later.
+- `.scaffolding/README.md` and `.scaffolding/README.zh-TW.md` are gone. They were
+  copies the generator made, last refreshed at 3.2.0, and nothing read them.
 
-   This script:
-   - Reads content from `i18n/locales/{lang}/readme.toml`
-   - Generates `README.md` (English) and `README.zh-TW.md` (中文)
-   - Syncs to `.scaffolding/README.md` and `.scaffolding/README.zh-TW.md`
-   - Adds language switcher links automatically
-   - **NO markdown code fences** around content (README is already markdown)
-
-3. **MANDATORY Verification (ALWAYS do this before committing):**
-   ```bash
-   # Verify all 4 files exist and are in sync
-   diff README.md .scaffolding/README.md
-   diff README.zh-TW.md .scaffolding/README.zh-TW.md
-   ```
-   
-   **Success criteria:**
-   - ✅ Both diffs show no differences (files are identical)
-   - ✅ Both language versions updated (en-US and zh-TW)
-   - ✅ Language switcher links present in both files
-   - ✅ No ```markdown code fences wrapping content
-   
-   **If verification fails:**
-   - Re-run generate-readme.sh
-   - Do NOT commit until all checks pass
-   - Reads content from `i18n/locales/{lang}/readme.toml`
-   - Generates `README.md` (English) and `README.zh-TW.md` (中文)
-   - Syncs to `.scaffolding/README.md` and `.scaffolding/README.zh-TW.md`
-   - Adds language switcher links automatically
-   - **NO markdown code fences** around content (README is already markdown)
-
-   ### Current Configuration
-
-This template uses **`separate` strategy**:
-- `README.md` - English (auto-generated from `en-US/readme.toml`)
-- `README.zh-TW.md` - 繁體中文 (auto-generated from `zh-TW/readme.toml`)
-
-### Important Rules
-
-1. **NEVER edit README.md or README.zh-TW.md directly** - Changes will be overwritten
-2. **Edit i18n TOML files** - All content comes from `i18n/locales/{lang}/readme.toml`
-3. **Run generate-readme.sh** - After editing TOML files, regenerate READMEs
-4. **NO ```markdown``` code fences** - README is markdown, content doesn't need wrapping
-
-3. **Verify language switcher (for separate strategy):**
-   - Top of README.md: Links to all language versions
-   - Format: `English | [繁體中文](./README.zh-TW.md) | [日本語](./README.ja-JP.md)`
-   - Current language shows as plain text (no link to itself)
-
-4. **Validation:**
-   - Separate: Each README file exists and is single-language
-   - Bilingual: Single README.md follows bilingual formatting rules
-   - Primary only: Only README.md exists
-
-**Reference:** [`.scaffolding/docs/README_BILINGUAL_FORMAT.md`](./.scaffolding/docs/README_BILINGUAL_FORMAT.md)
-
-**This is MANDATORY. No exceptions.**
-
-
+If i18n-driven README generation is wanted again, it needs the translation
+source to exist first. That is a design task, not a restoration.

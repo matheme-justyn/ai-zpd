@@ -4,7 +4,7 @@
 
 # ai-zpd
 
-[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](./.scaffolding/VERSION)
+[![Version](https://img.shields.io/badge/version-4.0.2-blue.svg)](./.scaffolding/VERSION)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 
 English | [繁體中文](./README.zh-TW.md)

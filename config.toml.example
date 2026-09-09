@@ -8,32 +8,6 @@
 # description = "Project description"
 # version = "0.1.0"
 
-# Project type determines which domain-specific modules load
-type = "fullstack"  # frontend | backend | fullstack | cli | library | academic | documentation | translation | other
-
-# Project features determine which feature modules load
-features = [
-  # Software Development Features
-  # "api",        # API_DESIGN.md
-  # "database",   # DATABASE_CONVENTIONS.md
-  # "auth",       # AUTH_IMPLEMENTATION.md
-  # "i18n",       # I18N_GUIDE.md
-  # "realtime",   # REALTIME_PATTERNS.md
-  # "upload",     # FILE_HANDLING.md
-  
-  # Academic/Documentation Features
-  # "citation",     # CITATION_MANAGEMENT.md
-  # "literature",   # LITERATURE_REVIEW.md
-  # "translation",  # TRANSLATION_GUIDE.md
-]
-
-# Quality requirements determine which quality modules load
-quality = [
-  # "performance",   # PERFORMANCE_OPTIMIZATION.md
-  # "accessibility", # ACCESSIBILITY.md
-  # "production",    # PRODUCTION_READINESS.md
-]
-
 
 # ==============================================================================
 # OpenCode Stability & Workflow
@@ -129,7 +103,36 @@ log_attempts = true
 show_reason = true
 
 [modules]
-# Force-enable modules (regardless of project.type)
+# Everything that selects which documentation modules load lives here, not
+# under [project] (ADR 0017). [project] holds project metadata only.
+
+# Which domain's documentation modules to load
+domain = "fullstack"  # frontend | backend | fullstack | cli | library | academic | documentation | translation | other
+
+# Feature modules to load
+features = [
+  # Software Development Features
+  # "api",        # API_DESIGN.md
+  # "database",   # DATABASE_CONVENTIONS.md
+  # "auth",       # AUTH_IMPLEMENTATION.md
+  # "i18n",       # I18N_GUIDE.md
+  # "realtime",   # REALTIME_PATTERNS.md
+  # "upload",     # FILE_HANDLING.md
+
+  # Academic/Documentation Features
+  # "citation",     # CITATION_MANAGEMENT.md
+  # "literature",   # LITERATURE_REVIEW.md
+  # "translation",  # TRANSLATION_GUIDE.md
+]
+
+# Quality modules to load
+quality = [
+  # "performance",   # PERFORMANCE_OPTIMIZATION.md
+  # "accessibility", # ACCESSIBILITY.md
+  # "production",    # PRODUCTION_READINESS.md
+]
+
+# Force-enable modules regardless of domain
 always_enabled = [
   "STYLE_GUIDE",
   "TERMINOLOGY",
@@ -141,5 +144,5 @@ always_enabled = [
 # Manually enable additional modules
 manual_enabled = []
 
-# Manually disable modules (even if project.type suggests them)
+# Manually disable modules (even if the domain suggests them)
 manual_disabled = []
