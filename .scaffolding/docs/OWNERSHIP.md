@@ -35,6 +35,23 @@ ADR 0014 把三倉拆分時，`.scaffolding/docs/` 下的 25 份文件**預設**
 
 後三份的依據是：**文件模組這一整套已經在 ai-skill-web。** 該 repo 的 `docs/` 下有 `API_DESIGN.md`、`PERFORMANCE_OPTIMIZATION.md`、`ACCESSIBILITY_STANDARDS.md`、`AUTH_IMPLEMENTATION.md`、`REALTIME_PATTERNS.md`、`FILE_HANDLING.md` 等——正是 ai-zpd `config.toml.example` 的 `[modules]` 註解所指的那些檔案。留在這裡的三份是同一批東西的殘留，不是本層的內容。
 
+## 提交給 ai-scheme（3）
+
+`ai-scheme` 側已表示會收，但要求逐份決定，所以這裡只列清單與理由，不直接寫進對方 repo。
+
+前兩份已在本次分類中從 `main` 刪除（commit `c8ca0d3`），內容取用方式：
+
+    git show c8ca0d3^:.scaffolding/docs/RELEASE_PROCESS.md
+    git show c8ca0d3^:.scaffolding/docs/SCAFFOLDING_DEV_GUIDE.md
+
+| 文件 | 用途 | 判定屬骨架層的理由 | 對方掛在 |
+| --- | --- | --- | --- |
+| `RELEASE_PROCESS.md`（339 行，已刪除） | 版本號規則、發版步驟、tag 與 CHANGELOG 的關係 | 發版流程屬骨架層（ADR 0014）。`ai-scheme` #14 正在改寫該 repo 自己的 `docs/RELEASE_PROCESS.md`，本層這份的主題完全落在那個範圍內 | `ai-scheme` #14 |
+| `SCAFFOLDING_DEV_GUIDE.md`（424 行，已刪除） | 如何開發與擴充模板本身：目錄慣例、加新模組、測試 | 「開發模板本身」在拆分後主要是骨架層的事——模板結構、CI、conventions 都在那裡。本層只剩安裝／執行機制 | `ai-scheme` #17 |
+| `TEMPLATE_SYNC.md`（265 行，**仍在本 repo**） | `sync-template.sh` 的使用說明：比對版本、選擇性同步、衝突處理 | 大部分已被 `status` 與 `update` 的契約取代。對方表示只收其中還活著的部分，所以本層先留著，等對方指認要哪些段落再刪 | 未定 |
+
+`generate-pr-template.sh` 對方**不收**：PR 模板產製屬骨架層，但他們的做法是 CLI 產生器而不是 shell 腳本（`ai-scheme` #8 已交付單一結構的 `.github/PULL_REQUEST_TEMPLATE.md`，多語版本在 #36）。該腳本讀的 `.scaffolding/templates/pr/` 已不存在，因此直接刪除，不移交。`generate-readme.sh` 與 `sync-readme.sh` 同理，對方也不收（README 由 i18n 產生在 `ai-scheme` #36）。
+
 ## 已刪除（12）
 
 內容保留在 git 歷史與 `.scaffolding/CHANGELOG.md`。
