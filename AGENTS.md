@@ -157,6 +157,8 @@ Three results that are not "no work to do":
 
 `current` with `next_command: null` from step 1 means the *skeleton* layer has nothing to do. It says nothing about step 2.
 
+The same two-layer split applies to configuration: `config.toml` is this layer's, `.scheme/config.yml` is the skeleton layer's, neither reads the other, and same-named keys are independent with no fallback. See [CONFIG_LAYERS.md](./.scaffolding/docs/CONFIG_LAYERS.md) for which file to edit, and ADR 0015.
+
 ---
 
 ### Installation & Update

@@ -117,6 +117,7 @@ The `init-project.sh` script intelligently detects your situation:
 ## 📖 Documentation
 
 - 📖 **[Documentation](./.scaffolding/docs/)** - Setup guides, migration paths, and design documents
+- 🧩 **[Two config files](./.scaffolding/docs/CONFIG_LAYERS.md)** - Why your project has both `config.toml` and `.scheme/config.yml`, and which one to edit
 - 🗂️ **[Document ownership](./.scaffolding/docs/OWNERSHIP.md)** - Which layer owns each document, and why
 - 🤖 **[AGENTS.md](./AGENTS.md)** - AI agent instructions and coding conventions
 - 📝 **[CHANGELOG.md](./.scaffolding/CHANGELOG.md)** - Version history and changes

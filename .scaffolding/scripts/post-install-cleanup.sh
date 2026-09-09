@@ -80,7 +80,6 @@ echo -e "${BLUE}📚 Step 3: 鷹架說明書 | Scaffolding Guides${NC}"
 echo -e "   這些是「如何使用鷹架」的指南，讀完可以刪除："
 GUIDES=(
     ".scaffolding/docs/README_GUIDE.md"
-    ".scaffolding/docs/TEMPLATE_SYNC.md"
     ".scaffolding/docs/README_BILINGUAL_FORMAT.md"
 )
 

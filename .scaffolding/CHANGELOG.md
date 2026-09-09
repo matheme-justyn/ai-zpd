@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `.scaffolding/docs/CONFIG_LAYERS.md`, linked from both READMEs and `AGENTS.md`: why a project ends up with both `config.toml` and `.scheme/config.yml`, which one to edit, why the key names deliberately do not look alike, and the two version axes. Written now rather than earlier because the skeleton layer's `.scheme/config.yml` has actually landed — describing a file that did not yet exist was the reason this was deferred.
+- `ci.yml` fails when a script reaches for the pre-rename `.template/` path. `migrate-to-template-dir.sh` is exempt by a marker comment: migrating projects created before the rename is its whole purpose.
+
+### Fixed
+
+- `sync-template.sh` could never work. Its `TEMPLATE_DIR` still pointed at `$PROJECT_ROOT/.template`, the directory's name before v2, so every run failed the existence check — while reporting `.scaffolding/ directory not found`, because the message strings had been renamed and the variable had not.
+- `test-template.sh` declared the same stale `TEMPLATE_DIR` and never used it. Removed.
+
+### Removed
+
+- `.scaffolding/docs/TEMPLATE_SYNC.md`. The ownership list had recorded it as documentation for `sync-template.sh`; that was wrong. It is manual procedure end to end — compare version numbers, add the template as a remote, cherry-pick files, edit the version by hand — and never mentions that script. `ai-scheme` reviewed it section by section and found nothing still live: the path it describes is what `status` → `next_command` → `update --plan` → `--apply-plan` replaced, and its conflict-handling section is superseded by the plan's manual-merge list. Line 36 also still pointed at the pre-split `my-vibe-scaffolding` releases page. Its five referrers are updated; `sync-template.sh` itself stays, documented in `AGENTS.md`.
+
+
+### Added
+
 - `.scaffolding/scripts/scheme-status.sh` and ADR 0020: the skeleton layer's state is now obtained from `ai-scheme status --json` and repeated verbatim, never inferred. The wrapper exists so that the three things easiest to simplify away — `"unknown"` is not `[]`, exit `2` is not "no work", `next_command` is printed and not run — have one identifiable place rather than being scattered through a long script.
 - `init-project.sh` reports that state before doing its own work. A failed or absent skeleton query does not block it — the two axes are independent — but it is never silently swallowed.
 

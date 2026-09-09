@@ -96,7 +96,7 @@ elif [ "$PROJECT_MODE" = "update" ]; then
     echo -e "${YELLOW}⚠️  重要提醒：${NC}"
     echo "  1. 重啟 VSCode 讓 OpenCode 配置生效"
     echo "  2. 檢查 .scaffolding/CHANGELOG.md 查看完整更新內容"
-    echo "  3. 如需更多功能，參考 .scaffolding/docs/TEMPLATE_SYNC.md"
+    echo "  3. 兩層設定檔的說明：.scaffolding/docs/CONFIG_LAYERS.md"
 fi
 
 echo ""
