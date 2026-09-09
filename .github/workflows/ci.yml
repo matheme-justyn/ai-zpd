@@ -70,7 +70,34 @@ jobs:
               VALIDATION_PASSED=false
             else
               echo ""
-              echo "  $SCRIPT_COUNT script(s) checked"
+              echo "  $SCRIPT_COUNT script(s) syntax-checked"
+            fi
+
+            # bash -n proves a script parses, not that what it invokes exists.
+            # Deleting install-hooks.sh left three live call sites in
+            # init-project.sh, and with `set -e` that aborts the primary install
+            # path — a break no syntax check can see. This catches the next one.
+            DANGLING=0
+            for script in .scaffolding/scripts/*.sh; do
+              [ -e "$script" ] || continue
+              grep -oE '(\./)?\.scaffolding/scripts/[A-Za-z0-9_.-]+\.sh' "$script" 2>/dev/null \
+                | sed 's|^\./||' | sort -u | while read -r called; do
+                  [ "$called" = "${script#./}" ] && continue
+                  [ -f "$called" ] || echo "$script|$called"
+                done
+            done > /tmp/dangling.txt
+
+            while IFS='|' read -r caller called; do
+              [ -z "$caller" ] && continue
+              echo "✗ $caller references $called, which does not exist"
+              DANGLING=$((DANGLING + 1))
+            done < /tmp/dangling.txt
+
+            if [ "$DANGLING" -gt 0 ]; then
+              echo "✗ $DANGLING dangling script reference(s)"
+              VALIDATION_PASSED=false
+            else
+              echo "  no dangling script references"
             fi
           fi
 

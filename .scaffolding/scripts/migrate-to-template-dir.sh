@@ -215,7 +215,6 @@ if [ -f "AGENTS.md" ]; then
     sed -i.tmp 's|docs/README_GUIDE.md|.scaffolding/docs/README_GUIDE.md|g' AGENTS.md
     sed -i.tmp 's|docs/TEMPLATE_SYNC.md|.scaffolding/docs/TEMPLATE_SYNC.md|g' AGENTS.md
     sed -i.tmp 's|scripts/init-project.sh|.scaffolding/scripts/init-project.sh|g' AGENTS.md
-    sed -i.tmp 's|scripts/bump-version.sh|.scaffolding/scripts/bump-version.sh|g' AGENTS.md
     sed -i.tmp 's|i18n/locales/|.scaffolding/i18n/locales/|g' AGENTS.md
     
     # Remove backup files

@@ -54,10 +54,9 @@ if [ "$MODE" = "update" ]; then
         echo ""
         echo "選項："
         echo "  1) 整併既有 agent 配置 (.claude, .roo → .agents)"
-        echo "  2) 重新安裝 Git hooks"
-        echo "  3) 取消"
+        echo "  2) 取消"
         echo ""
-        read -p "選擇 (1/2/3): " -n 1 -r choice
+        read -p "選擇 (1/2): " -n 1 -r choice
         echo ""
         
         case $choice in
@@ -65,10 +64,6 @@ if [ "$MODE" = "update" ]; then
                 ./.scaffolding/scripts/consolidate-agent-configs.sh
                 ;;
             2)
-                ./.scaffolding/scripts/install-hooks.sh
-                echo -e "${GREEN}✓ 已重新安裝 Git hooks${NC}"
-                ;;
-            3)
                 echo "已取消"
                 exit 0
                 ;;
@@ -84,21 +79,15 @@ if [ "$MODE" = "update" ]; then
     echo ""
     
     # 更新模式：整併 agent 配置
-    echo "步驟 1/3: 整併 agent 配置"
+    echo "步驟 1/2: 整併 agent 配置"
     echo ""
     ./.scaffolding/scripts/consolidate-agent-configs.sh
     
     # 更新版本記錄
     echo ""
-    echo "步驟 2/3: 更新版本記錄"
+    echo "步驟 2/2: 更新版本記錄"
     echo "$TEMPLATE_VERSION" > .template-version
     echo -e "${GREEN}✓ 已更新 .template-version → $TEMPLATE_VERSION${NC}"
-    
-    # 重新安裝 hooks
-    echo ""
-    echo "步驟 3/3: 更新 Git hooks"
-    ./.scaffolding/scripts/install-hooks.sh
-    echo -e "${GREEN}✓ 已更新 Git hooks${NC}"
     
     echo ""
     echo -e "${GREEN}╔════════════════════════════════════════════════════════╗${NC}"
@@ -145,13 +134,13 @@ echo -e "${BLUE}🚀 開始初始化...${NC}"
 echo ""
 
 # 1. 記錄模板版本
-echo "步驟 1/10: 記錄模板版本"
+echo "步驟 1/9: 記錄模板版本"
 echo "$TEMPLATE_VERSION" > .template-version
 echo -e "${GREEN}✓ 已建立 .template-version${NC}"
 echo ""
 
 # 2. 備份原始 README
-echo "步驟 2/10: 備份模板 README"
+echo "步驟 2/9: 備份模板 README"
 if [ -f "README.md" ]; then
     mv README.md .scaffolding/docs/TEMPLATE_README.md.backup
     echo -e "${GREEN}✓ 已備份 → .scaffolding/docs/TEMPLATE_README.md.backup${NC}"
@@ -159,7 +148,7 @@ fi
 echo ""
 
 # 3. 建立新的 README
-echo "步驟 3/10: 建立專案 README"
+echo "步驟 3/9: 建立專案 README"
 cat > README.md << EOF
 # $PROJECT_NAME
 
@@ -254,13 +243,13 @@ echo -e "${GREEN}✓ 已建立 README.md${NC}"
 echo ""
 
 # 4. 建立專案 VERSION（從 0.1.0 開始）
-echo "步驟 4/10: 設定專案版本"
+echo "步驟 4/9: 設定專案版本"
 echo "0.1.0" > VERSION
 echo -e "${GREEN}✓ 已設定為 0.1.0${NC}"
 echo ""
 
 # 5. 處理 LICENSE
-echo "步驟 5/10: LICENSE 設定"
+echo "步驟 5/9: LICENSE 設定"
 echo "   鷹架使用 MIT License"
 echo "   你的專案可以選擇不同的授權"
 echo ""
@@ -288,7 +277,7 @@ fi
 echo ""
 
 # 6-7. CONTRIBUTING.md 和 SECURITY.md（簡化版，僅詢問是否建立）
-echo "步驟 6/10: CONTRIBUTING.md 設定"
+echo "步驟 6/9: CONTRIBUTING.md 設定"
 read -p "建立 CONTRIBUTING.md? (y/N): " create_contrib
 if [[ $create_contrib =~ ^[Yy]$ ]]; then
     read -p "接受外部貢獻（PR）? (y/N): " accept_contrib
@@ -361,7 +350,7 @@ else
 fi
 echo ""
 
-echo "步驟 7/10: SECURITY.md 設定"
+echo "步驟 7/9: SECURITY.md 設定"
 read -p "建立 SECURITY.md? (y/N): " create_security
 if [[ $create_security =~ ^[Yy]$ ]]; then
     read -p "安全問題聯絡 Email: " security_email
@@ -401,26 +390,15 @@ else
 fi
 echo ""
 
-# 8. 安裝 Git hooks
-echo "步驟 8/10: Git Hooks 設定"
-read -p "安裝版本檢查 hook? (Y/n): " install_hooks
-if [[ ! $install_hooks =~ ^[Nn]$ ]]; then
-    ./.scaffolding/scripts/install-hooks.sh
-    echo -e "${GREEN}✓ 已安裝 Git hooks${NC}"
-else
-    echo -e "${YELLOW}⏭️  跳過 Git hooks${NC}"
-fi
-echo ""
-
 # 9. Agent 配置目錄
-echo "步驟 9/10: Agent 配置設定"
+echo "步驟 8/9: Agent 配置設定"
 mkdir -p .agents/skills
 echo -e "${GREEN}✓ 已建立 .agents/skills/ 目錄${NC}"
 echo "   此目錄用於跨工具的 agent skills（Claude, Cursor, RooCode 等）"
 echo ""
 
 # 10. 完成提示
-echo "步驟 10/10: 完成"
+echo "步驟 9/9: 完成"
 echo ""
 echo -e "${GREEN}╔════════════════════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║   🎉 初始化完成！                                     ║${NC}"

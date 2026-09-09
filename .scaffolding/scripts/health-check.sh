@@ -299,9 +299,6 @@ if [ $FAIL -eq 0 ]; then
     echo ""
     echo -e "${GREEN}✅ 專案健康狀況良好！${NC}"
     echo ""
-    echo "💡 如果需要發版，執行："
-    echo "   ./.scaffolding/scripts/bump-version.sh patch|minor|major"
-    echo ""
     exit 0
 else
     echo -e "${RED}❌ 發現 $FAIL 個問題，請修復後再檢查${NC}"
